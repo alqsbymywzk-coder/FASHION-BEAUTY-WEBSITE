@@ -52,6 +52,7 @@ nav a:hover{color:var(--gold)}
 footer{margin-top:30px;background:#111;border-top:1px solid #554323;text-align:center;padding:28px 15px;color:#aaa;font-size:12px;line-height:2}
 footer strong{color:#e6c36e;font-size:19px}
 .whatsapp{position:fixed;bottom:18px;left:15px;background:#188b50;color:white;padding:13px 17px;border-radius:30px;font-weight:bold;box-shadow:0 3px 12px #000}
+.payment{margin:15px;background:#151515;border:1px solid #735a2b;padding:18px;border-radius:5px}.payment h3{color:#e6c36e;margin-bottom:12px}.payment p{color:#ccc;font-size:13px;line-height:2;margin:8px 0}.payment-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}.payment code{direction:ltr;unicode-bidi:embed;color:#f1d78a;font-size:14px}.payment a{color:#f1d78a;text-decoration:underline}.payment input,.payment select{width:100%;padding:12px;background:#202020;border:1px solid #554323;color:white;border-radius:4px;margin:7px 0 12px}.payment label{display:block;color:#ddd;font-size:13px;margin-top:10px}.payment .hint{color:#aaa;font-size:12px}
 @media(min-width:650px){.products{grid-template-columns:repeat(4,1fr)}.hero{min-height:340px}.photo{height:230px}}
 </style>
 </head>
@@ -111,6 +112,22 @@ footer strong{color:#e6c36e;font-size:19px}
 <section class="banner" id="offers">
 <h2>✨ عروض فاشون اند بيوتي ✨</h2>
 <p>اكتشف تشكيلتنا المميزة واستمتع بتجربة تسوق أنيقة<br>تابعنا باستمرار لمعرفة أحدث العروض والمنتجات</p>
+</section>
+
+<section class="payment" id="payment">
+<h3>💳 طرق الدفع</h3>
+<p>اختر طريقة الدفع وحوّل قيمة الطلب، ثم أدخل رقم العملية. بعد فتح واتساب أرسل صورة إيصال التحويل للمراجعة اليدوية.</p>
+<div class="payment-row"><strong>فودافون كاش:</strong> <code>01221718109</code></div>
+<p><strong>إنستا باي:</strong> <a href="https://ipn.eg/S/elkasaby90/instapay/4sJAKB" target="_blank" rel="noopener">افتح رابط الدفع عبر إنستا باي</a></p>
+<label for="paymentMethod">طريقة الدفع</label>
+<select id="paymentMethod">
+<option value="">اختر طريقة الدفع</option>
+<option value="فودافون كاش">فودافون كاش</option>
+<option value="إنستا باي">إنستا باي</option>
+</select>
+<label for="transactionId">رقم العملية / مرجع التحويل</label>
+<input id="transactionId" type="text" placeholder="اكتب رقم العملية بعد التحويل">
+<p class="hint">تنبيه: الموقع لا يتحقق تلقائيًا من التحويل. سيتم تأكيد الطلب بعد مراجعة الإيصال يدويًا عبر واتساب.</p>
 </section>
 
 <section class="cartbox" id="cart">
@@ -174,8 +191,14 @@ document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,
 function removeItem(i){cart.splice(i,1);save()}
 function order(){
 if(!cart.length){alert("السلة فارغة");return}
-let msg="طلب جديد من FASHION & BEAUTY:%0A"+cart.map(p=>p.name+" × "+p.qty+" = "+p.price*p.qty).join("%0A")+"%0Aالإجمالي: "+cart.reduce((s,p)=>s+p.price*p.qty,0);
-window.open("https://wa.me/?text="+msg,"_blank");
+const method=document.getElementById("paymentMethod").value;
+const transaction=document.getElementById("transactionId").value.trim();
+if(!method){alert("اختر طريقة الدفع أولاً");document.getElementById("paymentMethod").focus();return}
+if(!transaction){alert("اكتب رقم العملية بعد التحويل");document.getElementById("transactionId").focus();return}
+const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
+const lines=cart.map(p=>p.name+" × "+p.qty+" = "+p.price*p.qty+" جنيه").join("\n");
+const msg="طلب جديد من FASHION & BEAUTY\n"+lines+"\nالإجمالي: "+total+" جنيه\nطريقة الدفع: "+method+"\nرقم العملية: "+transaction+"\nسأرسل صورة إيصال التحويل هنا للمراجعة.";
+window.open("https://wa.me/201221718109?text="+encodeURIComponent(msg),"_blank");
 }
 render();save();
 </script>
