@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080808">
+<title>FASHION & BEAUTY | فاشون اند بيوتي</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,Arial,sans-serif;background:#090909;color:#fff}
+:root{--gold:#d6ad55;--dark:#090909}
+a{color:inherit;text-decoration:none}
+.top{background:#bd984b;color:#080808;text-align:center;padding:10px;font-size:13px;font-weight:bold}
+header{padding:20px 15px;text-align:center;border-bottom:1px solid #302719}
+.logo{font-family:Georgia,serif;font-size:29px;color:#e5c16d;letter-spacing:2px;font-weight:bold}
+.sub{color:#aaa;font-size:12px;margin-top:7px}
+nav{display:flex;gap:20px;overflow-x:auto;padding:15px;background:#111;white-space:nowrap;justify-content:flex-start}
+nav a{font-size:13px;color:#ddd}
+nav a:hover{color:var(--gold)}
+.hero{margin:15px;border:1px solid #80632d;min-height:260px;display:flex;align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at center,#40331b,#15120c 55%,#080808);padding:25px}
+.hero h1{font-family:Georgia,serif;color:#e6c36e;font-size:34px;margin-bottom:12px}
+.hero p{color:#eee;line-height:2;font-size:14px}
+.goldbtn{display:inline-block;background:linear-gradient(120deg,#a77b2e,#f1d78a,#a77b2e);color:#111;padding:12px 25px;border-radius:3px;font-weight:bold;margin-top:18px;border:0;cursor:pointer}
+.section{padding:20px 15px}
+.heading{text-align:center;color:var(--gold);font-size:22px;margin:10px 0 8px}
+.desc{text-align:center;color:#888;font-size:12px;margin-bottom:20px}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.cat{border:1px solid #44351c;padding:17px 5px;text-align:center;background:#12110e;color:#e6c36e;font-size:13px;border-radius:4px;cursor:pointer}
+.cat:active{background:#40331b}
+.search{width:100%;padding:13px;background:#171717;border:1px solid #554323;color:white;border-radius:4px;margin-bottom:15px}
+.filters{display:flex;gap:8px;overflow-x:auto;margin-bottom:18px}
+.filters button{background:#191919;border:1px solid #514124;color:#ddd;padding:9px 15px;white-space:nowrap;border-radius:20px}
+.filters button.active{background:#c39b4b;color:#080808}
+.products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.product{background:#141414;border:1px solid #302719;border-radius:5px;overflow:hidden}
+.photo{height:165px;background:linear-gradient(145deg,#302719,#111);display:flex;align-items:center;justify-content:center;color:#c6a45b;font-size:42px}
+.photo img{width:100%;height:100%;object-fit:cover}
+.info{padding:12px}
+.info h3{font-size:14px;margin-bottom:8px}
+.price{color:#e4bd66;font-weight:bold;font-size:15px}
+.old{color:#777;text-decoration:line-through;font-size:11px;margin-right:5px}
+.add{width:100%;padding:10px;background:#bd984b;color:#111;border:0;margin-top:12px;font-weight:bold;border-radius:3px;cursor:pointer}
+.empty{text-align:center;color:#999;padding:30px;grid-column:1/-1}
+.banner{margin:15px;background:#19150d;border:1px solid #735a2b;padding:25px;text-align:center}
+.banner h2{color:#e6c36e;margin-bottom:10px}
+.banner p{color:#ccc;font-size:13px;line-height:2}
+.cartbox{background:#151515;padding:20px;border:1px solid #554323;margin:15px;border-radius:5px}
+.cartbox h3{color:#e6c36e;margin-bottom:12px}
+.cartline{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #333;font-size:13px}
+.cartline button{background:none;color:#e6c36e;border:0;padding:4px}
+footer{margin-top:30px;background:#111;border-top:1px solid #554323;text-align:center;padding:28px 15px;color:#aaa;font-size:12px;line-height:2}
+footer strong{color:#e6c36e;font-size:19px}
+.whatsapp{position:fixed;bottom:18px;left:15px;background:#188b50;color:white;padding:13px 17px;border-radius:30px;font-weight:bold;box-shadow:0 3px 12px #000}
+@media(min-width:650px){.products{grid-template-columns:repeat(4,1fr)}.hero{min-height:340px}.photo{height:230px}}
+</style>
+</head>
+<body>
+<div class="top">aml&malk&toleen — مرحبا بكم فى متجرنا — شرفتونا ❤️</div>
+
+<header>
+<div class="logo">FASHION & BEAUTY</div>
+<div class="sub">أناقتك تبدأ من هنا ✨</div>
+</header>
+
+<nav>
+<a href="#home">الرئيسية</a>
+<a href="#categories">الأقسام</a>
+<a href="#products">المنتجات</a>
+<a href="#offers">العروض</a>
+<a href="#cart">سلة التسوق 🛒 <span id="count">0</span></a>
+</nav>
+
+<section class="hero" id="home">
+<div>
+<h1>FASHION & BEAUTY</h1>
+<p>اكتشف عالم الأناقة والجمال<br>اختيارات مميزة لك ولأسرتك<br>الجودة والأناقة في مكان واحد</p>
+<a href="#products" class="goldbtn">تسوق الآن</a>
+</div>
+</section>
+
+<section class="section" id="categories">
+<h2 class="heading">أقسام متجرنا</h2>
+<p class="desc">اختار القسم المفضل لديك</p>
+<div class="categories">
+<button class="cat" onclick="filter('رجالي')">👔 رجالي</button>
+<button class="cat" onclick="filter('حريمي')">👗 حريمي</button>
+<button class="cat" onclick="filter('أطفال')">🧸 أطفال</button>
+<button class="cat" onclick="filter('إكسسوارات')">💍 إكسسوارات</button>
+<button class="cat" onclick="filter('عطور')">🌹 عطور</button>
+<button class="cat" onclick="filter('تجميل')">💄 مستحضرات تجميل</button>
+</div>
+</section>
+
+<section class="section" id="products">
+<h2 class="heading">الأكثر مبيعًا</h2>
+<p class="desc">تسوق أحدث اختياراتنا</p>
+<input class="search" id="search" placeholder="ابحث عن منتج..." oninput="render()">
+<div class="filters">
+<button class="active" onclick="filter('الكل',this)">الكل</button>
+<button onclick="filter('رجالي',this)">رجالي</button>
+<button onclick="filter('حريمي',this)">حريمي</button>
+<button onclick="filter('أطفال',this)">أطفال</button>
+<button onclick="filter('إكسسوارات',this)">إكسسوارات</button>
+<button onclick="filter('عطور',this)">عطور</button>
+<button onclick="filter('تجميل',this)">تجميل</button>
+</div>
+<div class="products" id="productsList"></div>
+</section>
+
+<section class="banner" id="offers">
+<h2>✨ عروض فاشون اند بيوتي ✨</h2>
+<p>اكتشف تشكيلتنا المميزة واستمتع بتجربة تسوق أنيقة<br>تابعنا باستمرار لمعرفة أحدث العروض والمنتجات</p>
+</section>
+
+<section class="cartbox" id="cart">
+<h3>🛒 سلة مشترياتك</h3>
+<div id="cartItems">السلة فارغة حاليًا</div>
+<p style="margin-top:15px;color:#e6c36e">الإجمالي: <span id="total">0</span></p>
+<button class="goldbtn" onclick="order()">إتمام الطلب عبر واتساب</button>
+</section>
+
+<footer>
+<strong>FASHION & BEAUTY</strong>
+<p>أناقتك وجمالك عنوان تميزك</p>
+<p>aml&malk&toleen</p>
+<p>جميع الحقوق محفوظة © 2026</p>
+</footer>
+
+<a class="whatsapp" href="https://wa.me/" target="_blank">واتساب</a>
+
+<script>
+const products=[
+{name:"قميص أنيق",cat:"رجالي",price:250,icon:"👔"},
+{name:"فستان أنيق",cat:"حريمي",price:450,icon:"👗"},
+{name:"طقم أطفال",cat:"أطفال",price:300,icon:"🧸"},
+{name:"إكسسوار مميز",cat:"إكسسوارات",price:120,icon:"💍"},
+{name:"عطر فاخر",cat:"عطور",price:350,icon:"🌹"},
+{name:"مجموعة تجميل",cat:"تجميل",price:220,icon:"💄"}
+];
+let selected="الكل";
+let cart=JSON.parse(localStorage.getItem("fb_cart")||"[]");
+function filter(cat,btn){
+selected=cat;
+document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+if(btn)btn.classList.add("active");
+render();
+document.getElementById("products").scrollIntoView({behavior:"smooth"});
+}
+function render(){
+let q=document.getElementById("search").value.trim();
+let list=products.filter(p=>(selected==="الكل"||p.cat===selected)&&(p.name.includes(q)||p.cat.includes(q)));
+document.getElementById("productsList").innerHTML=list.length?list.map((p)=>`
+<div class="product">
+<div class="photo">${p.icon}</div>
+<div class="info">
+<h3>${p.name}</h3>
+<div class="price">${p.price} <small>جنيه</small></div>
+<button class="add" onclick="add('${p.name}')">أضف إلى السلة</button>
+</div></div>`).join(""):'<div class="empty">لا توجد منتجات مطابقة للبحث</div>';
+}
+function add(name){
+let item=cart.find(x=>x.name===name);
+if(item)item.qty++;else cart.push({name,qty:1,price:products.find(p=>p.name===name).price});
+save();
+}
+function save(){
+localStorage.setItem("fb_cart",JSON.stringify(cart));
+document.getElementById("count").textContent=cart.reduce((s,p)=>s+p.qty,0);
+document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
+<div class="cartline"><span>${p.name} × ${p.qty}</span><span>${p.price*p.qty} جنيه <button onclick="removeItem(${i})">حذف</button></span></div>`).join(""):"السلة فارغة حاليًا";
+document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
+}
+function removeItem(i){cart.splice(i,1);save()}
+function order(){
+if(!cart.length){alert("السلة فارغة");return}
+let msg="طلب جديد من FASHION & BEAUTY:%0A"+cart.map(p=>p.name+" × "+p.qty+" = "+p.price*p.qty).join("%0A")+"%0Aالإجمالي: "+cart.reduce((s,p)=>s+p.price*p.qty,0);
+window.open("https://wa.me/?text="+msg,"_blank");
+}
+render();save();
+</script>
+</body>
+</html>
