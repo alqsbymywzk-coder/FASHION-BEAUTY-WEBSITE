@@ -93,6 +93,12 @@ footer strong{color:var(--gold2);font-size:19px}
 .detail-add{width:100%;margin-top:18px;padding:14px;border:0;border-radius:7px;background:linear-gradient(110deg,#a77b2e,#f3dc9b,#a77b2e);color:#171109;font-weight:bold;font-size:15px;cursor:pointer}
 @keyframes veilIn{from{opacity:0}to{opacity:1}}
 @keyframes detailPop{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:none}}
+/* تنسيق موحد لأسماء المنتجات داخل المجلة */
+.info{display:flex;flex-direction:column;align-items:stretch}
+.info h3{font-size:14px;line-height:1.65;text-align:center;min-height:46px;max-height:46px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere;margin:0 0 7px;color:#f7e8c3;font-weight:700}
+.product-code{text-align:center;letter-spacing:.3px}
+.info .price{text-align:center;margin:0 0 2px;font-size:15px}
+@media(max-width:390px){.info h3{font-size:12px;min-height:42px;max-height:42px}}
 @media(min-width:650px){#products .products{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px}.photo{width:160px;height:215px}.hero{width:min(1180px,calc(100% - 48px))}.shop-tools,#products{width:min(1180px,calc(100% - 48px))}.brand-frame{min-height:210px}}
 @media(max-width:390px){.icon-categories{gap:5px}.icon-category{border-radius:9px}.brand-frame{aspect-ratio:2.7/1;min-height:125px}.info{padding:9px}.info h3{font-size:12px}}
 </style>
