@@ -67,7 +67,7 @@ footer strong{color:var(--gold2);font-size:19px}
 .whatsapp{position:fixed;z-index:900;bottom:18px;left:15px;background:#188b50;color:white;padding:12px 17px;border-radius:30px;font-weight:bold;box-shadow:0 3px 14px #000}
 .admin-entry{display:block;text-align:center;margin:22px auto 5px;color:#b9a477;font-size:11px;text-decoration:underline;cursor:pointer;background:none;border:0;width:100%}
 .admin-panel{display:none;width:min(760px,calc(100% - 28px));margin:15px auto;padding:18px;background:#14120e;border:1px solid #8a6934;border-radius:9px}
-.admin-panel.open{display:block}.admin-login-overlay{display:none;position:fixed;inset:0;z-index:1500;background:#000d;align-items:center;justify-content:center;padding:18px}.admin-login-overlay.show{display:flex}.admin-login-box{width:min(100%,360px);padding:22px;background:#17130d;border:1px solid #d9b66b;border-radius:12px;box-shadow:0 15px 50px #000}.admin-login-box h3{color:#f5dfa0;margin-bottom:14px}.admin-login-box label{display:block;color:#ddd;font-size:13px;margin:10px 0 6px}.admin-login-box input{width:100%;padding:12px;background:#202020;border:1px solid #80612c;border-radius:7px;color:#fff}.admin-login-error{color:#ff8d80;font-size:12px;min-height:18px;margin-top:7px}
+.admin-panel.open{display:block}.admin-logout{float:left;background:#713b30!important;color:#fff!important;border:1px solid #b86c5d!important;padding:8px 14px;border-radius:6px;font-weight:bold}.admin-login-overlay{display:none;position:fixed;inset:0;z-index:1500;background:#000d;align-items:center;justify-content:center;padding:18px}.admin-login-overlay.show{display:flex}.admin-login-box{width:min(100%,360px);padding:22px;background:#17130d;border:1px solid #d9b66b;border-radius:12px;box-shadow:0 15px 50px #000}.admin-login-box h3{color:#f5dfa0;margin-bottom:14px}.admin-login-box label{display:block;color:#ddd;font-size:13px;margin:10px 0 6px}.admin-login-box input{width:100%;padding:12px;background:#202020;border:1px solid #80612c;border-radius:7px;color:#fff}.admin-login-error{color:#ff8d80;font-size:12px;min-height:18px;margin-top:7px}
 .admin-panel h2{color:var(--gold2);margin-bottom:8px;font-size:20px}
 .admin-note{color:#d6b976;background:#251d10;padding:10px;border-radius:5px;font-size:12px;line-height:1.8;margin:12px 0}
 .admin-panel label{display:block;color:#ddd;font-size:12px;margin:12px 0 5px}
@@ -204,7 +204,7 @@ footer strong{color:var(--gold2);font-size:19px}
  </form>
 </div>
 <section class="admin-panel" id="adminPanel">
-<h2>لوحة إدارة المنتجات</h2>
+<button type="button" class="admin-logout" onclick="adminLogout()">تسجيل الخروج ↩</button><h2>لوحة إدارة المنتجات</h2>
 <p style="color:#aaa;font-size:12px">إضافة المنتجات وتعديل بياناتها وصورها وترتيبها.</p>
 <div class="admin-note">نسخة أولية: التغييرات تُحفظ في هذا المتصفح فقط ولا تظهر تلقائيًا للزوار من أجهزة أخرى. يلزم ربط قاعدة بيانات مشتركة وتأمين دخول المدير قبل اعتماد النشر العام.</div>
 <form id="adminForm" onsubmit="saveAdminProduct(event)">
@@ -234,6 +234,7 @@ footer strong{color:var(--gold2);font-size:19px}
 const ADMIN_PASSWORD="411990M@mt";
 function toggleAdmin(){
 const panel=document.getElementById("adminPanel");
+if(sessionStorage.getItem("fb_admin_logged_in")==="1"){panel.classList.add("open");renderAdminProducts();panel.scrollIntoView({behavior:"smooth",block:"start"});return;}
 if(panel.classList.contains("open")){panel.classList.remove("open");return;}
 const overlay=document.getElementById("adminLoginOverlay");
 document.getElementById("adminLoginError").textContent="";
@@ -255,10 +256,17 @@ input.focus();
 return;
 }
 input.blur();
+sessionStorage.setItem("fb_admin_logged_in","1");
 document.getElementById("adminLoginOverlay").classList.remove("show");
 document.getElementById("adminPanel").classList.add("open");
 renderAdminProducts();
 document.getElementById("adminPanel").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function adminLogout(){
+sessionStorage.removeItem("fb_admin_logged_in");
+document.getElementById("adminPanel").classList.remove("open");
+resetAdminForm();
+window.scrollTo({top:0,behavior:"smooth"});
 }
 function resetAdminForm(){
 document.getElementById("adminForm").reset();
@@ -412,6 +420,10 @@ if(navigator.share && navigator.canShare && navigator.canShare({files:[receipt]}
  alert("متصفحك لا يدعم مشاركة الصورة مباشرة. سنفتح واتساب برسالة الطلب؛ أرفق صورة فاتورة الإيداع يدويًا في المحادثة.");
  window.open("https://wa.me/201221718109?text="+encodeURIComponent(msg),"_blank");
 }
+}
+if(sessionStorage.getItem("fb_admin_logged_in")==="1"){
+document.getElementById("adminPanel").classList.add("open");
+renderAdminProducts();
 }
 render();save();
 </script>
