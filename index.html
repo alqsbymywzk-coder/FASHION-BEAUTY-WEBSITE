@@ -118,6 +118,37 @@ footer strong{color:#e6c36e;font-size:19px}
 .admin-row span{flex:1}
 .admin-row button.delete{background:#713b30;color:#fff}
 .admin-list{margin-top:15px}
+
+/* MAGAZINE-STYLE CATALOG REDESIGN */
+.magazine{max-width:1240px;margin:0 auto;padding:18px 16px 30px;background:#0b0b0b}
+.magazine-intro{padding:24px 14px 22px;margin:0 0 22px;border:0;border-bottom:1px solid #5c4724;background:linear-gradient(115deg,#17130c,#0d0c0a 55%,#21190d);box-shadow:none}
+.magazine-intro h2{font-size:clamp(24px,4vw,36px);margin:9px 0}
+.magazine-block{margin:24px 0 30px}
+.magazine-strip-head{align-items:center;margin:0 0 15px;padding:0 0 11px;border-bottom:1px solid #49391f}
+.magazine-strip-head h3{font-size:20px}
+.magazine-strip-head span{font-size:11px}
+.magazine-products,.magazine-products.auto-strip{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;overflow:visible!important;padding:0!important}
+.auto-track{display:contents!important;animation:none!important;width:auto!important}
+.magazine-product,.auto-track .magazine-product{width:auto!important;max-width:none;flex:initial!important;border-radius:5px;background:#282116;box-shadow:0 5px 18px #0008}
+.magazine-product:before{inset:5px;border-radius:2px;border-color:#d9b96855}
+.magazine-product-inner{border-radius:4px;background:#12110e}
+.magazine-product-art{height:auto!important;aspect-ratio:4/5;min-height:0;background:linear-gradient(145deg,#40321b,#15120d);font-size:clamp(40px,7vw,65px)}
+.magazine-product-art:after{inset:7px;border-radius:2px}
+.magazine-product-art img{object-fit:cover}
+.magazine-product-copy{padding:11px 8px 13px}
+.magazine-product-copy h4{font-size:13px;min-height:30px;line-height:1.6}
+.magazine-product-price{font-size:15px}
+.magazine-product-hint{font-size:10px}
+.magazine-cats{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:16px 0 22px}
+.magazine-cat{min-height:78px;border-radius:5px;background:#15130f}
+.product-ribbon{top:12px;right:12px;border-radius:2px;font-size:10px}
+@media(min-width:650px){
+ .magazine{padding:25px 24px 40px}
+ .magazine-products,.magazine-products.auto-strip{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+ .magazine-product-art{height:auto!important;aspect-ratio:4/5}
+ .magazine-cats{grid-template-columns:repeat(7,minmax(0,1fr))}
+}
+
 </style>
 </head>
 <body>
@@ -335,12 +366,15 @@ if(btn)btn.classList.add("active");
 const list=cat==="الكل"?products:products.filter(p=>p.cat===cat);
 document.getElementById("magazineCategoryProducts").innerHTML=list.length?list.map(p=>productCard(p,products.indexOf(p))).join(""):'<div class="empty">لا توجد منتجات في هذا القسم حاليًا</div>';
 }
-function makeAutoTrack(items){return items.length?'<div class="auto-track">'+items+items+'</div>':'<div class="empty">لا توجد منتجات للعرض حاليًا</div>'}
 function renderMagazine(){
 const newest=products.slice().reverse();
-const latestHost=document.getElementById("magazineLatest");latestHost.classList.add("auto-strip");latestHost.innerHTML=makeAutoTrack(newest.map(p=>productCard(p,products.indexOf(p),"جديد")).join(""));
+const latestHost=document.getElementById("magazineLatest");
+latestHost.classList.remove("auto-strip");
+latestHost.innerHTML=newest.length?newest.map(p=>productCard(p,products.indexOf(p),"جديد")).join(""):'<div class="empty">لا توجد منتجات للعرض حاليًا</div>';
 const popular=products.filter(p=>p.popular);
-const popularHost=document.getElementById("magazinePopular");popularHost.classList.add("auto-strip");popularHost.innerHTML=popular.length?makeAutoTrack(popular.map(p=>productCard(p,products.indexOf(p),"الأكثر طلبًا")).join("")):'<div class="empty" style="padding:10px 4px;font-size:12px">اختاري المنتجات الأكثر طلبًا من لوحة الإدارة لعرضها هنا.</div>';
+const popularHost=document.getElementById("magazinePopular");
+popularHost.classList.remove("auto-strip");
+popularHost.innerHTML=popular.length?popular.map(p=>productCard(p,products.indexOf(p),"الأكثر طلبًا")).join(""):'<div class="empty">اختاري المنتجات الأكثر طلبًا من لوحة الإدارة لعرضها هنا.</div>';
 showMagazine("الكل",document.querySelector(".magazine-cat"));
 }
 function openCart(e){if(e)e.preventDefault();const box=document.getElementById("cart");box.classList.add("open");box.scrollIntoView({behavior:"smooth",block:"start"});}
