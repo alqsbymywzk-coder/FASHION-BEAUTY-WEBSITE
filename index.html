@@ -72,7 +72,7 @@ footer strong{color:var(--gold2);font-size:19px}
 .admin-note{color:#d6b976;background:#251d10;padding:10px;border-radius:5px;font-size:12px;line-height:1.8;margin:12px 0}
 .admin-panel label{display:block;color:#ddd;font-size:12px;margin:12px 0 5px}
 .admin-panel input,.admin-panel select,.admin-panel textarea{width:100%;padding:11px;background:#202020;border:1px solid #594522;border-radius:5px;color:#fff}
-.admin-panel button{cursor:pointer}
+.admin-panel button{cursor:pointer}.admin-choice-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(75px,1fr));gap:7px;margin:8px 0 14px}.admin-choice{display:flex!important;align-items:center;gap:6px;background:#211b10;border:1px solid #594522;border-radius:6px;padding:8px!important;margin:0!important}.admin-choice input{width:auto!important;accent-color:#d9b66b}
 .admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .admin-actions button,.admin-row button{padding:9px 12px;border:0;border-radius:5px;background:#c49a48;color:#151109;font-weight:bold}
 .admin-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #40331d;font-size:12px}
@@ -198,7 +198,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <label for="adminName">اسم المنتج</label><input id="adminName" required maxlength="90" placeholder="اسم المنتج">
 <label for="adminPrice">السعر</label><input id="adminPrice" type="number" min="0" step="0.01" required placeholder="السعر">
 <label for="adminCategory">القسم</label><select id="adminCategory"><option>رجالي</option><option>حريمي</option><option>أطفال</option><option>إكسسوارات</option><option>عطور</option><option>تجميل</option></select>
-<div id="adminVariants"><label for="adminSizes">المقاسات المتاحة (افصل بينها بفاصلة)</label><input id="adminSizes" placeholder="S, M, L, XL"><label for="adminColors">الألوان المتاحة (افصل بينها بفاصلة)</label><input id="adminColors" placeholder="أسود, أبيض, بيج"><p style="color:#aaa;font-size:11px;margin-top:5px">تظهر اختيارات المقاس واللون لمنتجات الملابس فقط.</p></div><label for="adminImage">صورة المنتج</label><input id="adminImage" type="file" accept="image/*">
+<div id="adminVariants"><label>حدد المقاسات المتوفرة لهذا المنتج</label><div id="adminSizeOptions" class="admin-choice-grid"><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="L"> L</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XL"> XL</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XXL"> XXL</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XXXL"> XXXL</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XXXXL"> XXXXL</label></div><label>حدد الألوان المتوفرة لهذا المنتج</label><div id="adminColorOptions" class="admin-choice-grid"><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="أسود"> أسود</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="أبيض"> أبيض</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="بيج"> بيج</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="أحمر"> أحمر</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="أزرق"> أزرق</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="كحلي"> كحلي</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="أخضر"> أخضر</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="زيتي"> زيتي</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="بني"> بني</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="رمادي"> رمادي</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="وردي"> وردي</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="أصفر"> أصفر</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="بنفسجي"> بنفسجي</label><label class="admin-choice"><input type="checkbox" name="adminColorChoice" value="برتقالي"> برتقالي</label></div><p style="color:#aaa;font-size:11px;margin-top:5px">ضع علامة أمام كل مقاس ولون متوفر فعليًا. العميل لن يرى إلا الاختيارات التي تحددها هنا.</p></div><label for="adminImage">صورة المنتج</label><input id="adminImage" type="file" accept="image/*">
 <label style="display:flex;align-items:center;gap:8px"><input id="adminPopular" type="checkbox" style="width:auto"> عرض ضمن الأكثر طلبًا</label>
 <div class="admin-actions"><button type="submit" id="adminSaveBtn">حفظ المنتج</button><button type="button" onclick="resetAdminForm()" style="background:#444;color:#fff">إلغاء</button></div>
 </form>
@@ -228,6 +228,7 @@ renderAdminProducts();
 function resetAdminForm(){
 document.getElementById("adminForm").reset();
 document.getElementById("adminEditIndex").value="-1";
+document.querySelectorAll('input[name="adminSizeChoice"],input[name="adminColorChoice"]').forEach(x=>x.checked=false);
 document.getElementById("adminSaveBtn").textContent="حفظ المنتج";
 }
 function renderAdminProducts(){
@@ -240,8 +241,8 @@ document.getElementById("adminEditIndex").value=String(i);
 document.getElementById("adminName").value=p.name||"";
 document.getElementById("adminPrice").value=p.price||0;
 document.getElementById("adminCategory").value=p.cat||"رجالي";
-document.getElementById("adminSizes").value=(p.sizes||[]).join(", ");
-document.getElementById("adminColors").value=(p.colors||[]).join(", ");
+document.querySelectorAll('input[name="adminSizeChoice"]').forEach(x=>x.checked=(p.sizes||[]).includes(x.value));
+document.querySelectorAll('input[name="adminColorChoice"]').forEach(x=>x.checked=(p.colors||[]).includes(x.value));
 document.getElementById("adminPopular").checked=!!p.popular;
 document.getElementById("adminSaveBtn").textContent="حفظ التعديلات";
 document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
@@ -251,8 +252,8 @@ e.preventDefault();
 const name=document.getElementById("adminName").value.trim();
 const price=Number(document.getElementById("adminPrice").value);
 const cat=document.getElementById("adminCategory").value;
-const sizes=document.getElementById("adminSizes").value.split(",").map(x=>x.trim()).filter(Boolean);
-const colors=document.getElementById("adminColors").value.split(",").map(x=>x.trim()).filter(Boolean);
+const sizes=[...document.querySelectorAll('input[name="adminSizeChoice"]:checked')].map(x=>x.value);
+const colors=[...document.querySelectorAll('input[name="adminColorChoice"]:checked')].map(x=>x.value);
 const file=document.getElementById("adminImage").files[0];
 const editIndex=Number(document.getElementById("adminEditIndex").value);
 let image=editIndex>=0?(products[editIndex].image||""):"";
