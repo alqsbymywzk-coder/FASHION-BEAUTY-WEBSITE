@@ -116,7 +116,7 @@ footer strong{color:#e6c36e;font-size:19px}
 
 <section class="payment" id="payment">
 <h3>💳 طرق الدفع</h3>
-<p>اختر طريقة الدفع وحوّل قيمة الطلب، ثم أدخل رقم العملية. بعد فتح واتساب أرسل صورة إيصال التحويل للمراجعة اليدوية.</p>
+<p>اختر طريقة الدفع وحوّل قيمة الطلب، ثم أرفق صورة فاتورة الإيداع لإرسالها مع الطلب للمراجعة اليدوية.</p>
 <div class="payment-row"><strong>فودافون كاش:</strong> <code>01221718109</code></div>
 <p><strong>إنستا باي:</strong> <a href="https://ipn.eg/S/elkasaby90/instapay/4sJAKB" target="_blank" rel="noopener">افتح رابط الدفع عبر إنستا باي</a></p>
 <label for="paymentMethod">طريقة الدفع</label>
@@ -125,9 +125,10 @@ footer strong{color:#e6c36e;font-size:19px}
 <option value="فودافون كاش">فودافون كاش</option>
 <option value="إنستا باي">إنستا باي</option>
 </select>
-<label for="transactionId">رقم العملية / مرجع التحويل</label>
-<input id="transactionId" type="text" placeholder="اكتب رقم العملية بعد التحويل">
-<p class="hint">تنبيه: الموقع لا يتحقق تلقائيًا من التحويل. سيتم تأكيد الطلب بعد مراجعة الإيصال يدويًا عبر واتساب.</p>
+<label for="receiptImage">صورة فاتورة الإيداع</label>
+<input id="receiptImage" type="file" accept="image/*" capture="environment" required>
+<p class="hint">ارفع صورة واضحة لفاتورة الإيداع من الكاميرا أو معرض الصور. لن يتم إرسال الطلب بدون الصورة.</p>
+<p class="hint">تنبيه: سيتم مراجعة صورة الإيداع يدويًا قبل تأكيد الطلب.</p>
 </section>
 
 <section class="cartbox" id="cart">
@@ -189,16 +190,27 @@ document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
 document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
 }
 function removeItem(i){cart.splice(i,1);save()}
-function order(){
+async function order(){
 if(!cart.length){alert("السلة فارغة");return}
 const method=document.getElementById("paymentMethod").value;
-const transaction=document.getElementById("transactionId").value.trim();
+const receiptInput=document.getElementById("receiptImage");
+const receipt=receiptInput.files && receiptInput.files[0];
 if(!method){alert("اختر طريقة الدفع أولاً");document.getElementById("paymentMethod").focus();return}
-if(!transaction){alert("اكتب رقم العملية بعد التحويل");document.getElementById("transactionId").focus();return}
+if(!receipt){alert("أرفق صورة فاتورة الإيداع أولاً");receiptInput.focus();return}
+if(!receipt.type.startsWith("image/")){alert("من فضلك اختر صورة فقط");receiptInput.value="";return}
 const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
 const lines=cart.map(p=>p.name+" × "+p.qty+" = "+p.price*p.qty+" جنيه").join("\n");
-const msg="طلب جديد من FASHION & BEAUTY\n"+lines+"\nالإجمالي: "+total+" جنيه\nطريقة الدفع: "+method+"\nرقم العملية: "+transaction+"\nسأرسل صورة إيصال التحويل هنا للمراجعة.";
-window.open("https://wa.me/201221718109?text="+encodeURIComponent(msg),"_blank");
+const msg="طلب جديد من FASHION & BEAUTY\n"+lines+"\nالإجمالي: "+total+" جنيه\nطريقة الدفع: "+method+"\nمرفق صورة فاتورة الإيداع للمراجعة اليدوية.";
+if(navigator.share && navigator.canShare && navigator.canShare({files:[receipt]})){
+ try{
+  await navigator.share({title:"طلب FASHION & BEAUTY",text:msg,files:[receipt]});
+ }catch(error){
+  if(error.name!=="AbortError")alert("تعذر مشاركة الصورة. حاول مرة أخرى أو أرسلها يدويًا عبر واتساب.");
+ }
+}else{
+ alert("متصفحك لا يدعم مشاركة الصورة مباشرة. سنفتح واتساب برسالة الطلب؛ أرفق صورة فاتورة الإيداع يدويًا في المحادثة.");
+ window.open("https://wa.me/201221718109?text="+encodeURIComponent(msg),"_blank");
+}
 }
 render();save();
 </script>
