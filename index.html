@@ -20,6 +20,10 @@ button,input,select{font:inherit}
 .brand-frame:before{content:"";position:absolute;inset:0;padding:3px;border-radius:12px;background:conic-gradient(from 0deg,#f5dda0,#fff,#d5a34e,#72d9ed,#a58bff,#ef91bf,#f5dda0);animation:frameGlow 7s linear infinite,framePulse 3s ease-in-out infinite;z-index:-2}
 .brand-frame:after{content:"";position:absolute;inset:3px;border-radius:9px;background:radial-gradient(ellipse at center,#21190d,#090909 75%);z-index:-1}
 .brand-logo-image{display:block;width:100%;height:100%;max-height:290px;object-fit:contain;filter:drop-shadow(0 0 10px #e5bf6b66)}
+.logo-shine{position:absolute;inset:-35% auto -35% -35%;width:22%;z-index:1;pointer-events:none;transform:skewX(-22deg);background:linear-gradient(90deg,transparent,#fff7d688,transparent);filter:blur(5px);animation:logoSweep 5.8s ease-in-out infinite}
+@keyframes logoSweep{0%,18%{left:-35%;opacity:0}28%{opacity:.85}58%{left:115%;opacity:0}100%{left:115%;opacity:0}}
+.brand-logo-image{position:relative;z-index:2;animation:logoGlimmer 4s ease-in-out infinite}
+@keyframes logoGlimmer{0%,100%{filter:drop-shadow(0 0 7px #e5bf6b55)}50%{filter:drop-shadow(0 0 16px #f8dfa088)}}
 @keyframes frameGlow{to{filter:hue-rotate(360deg)}}
 @keyframes framePulse{0%,100%{opacity:.62;box-shadow:0 0 9px #e5c16d66}50%{opacity:1;box-shadow:0 0 18px #fff0bd,0 0 32px #65d9ff77}}
 .shop-tools{width:min(1180px,calc(100% - 28px));margin:0 auto;padding:8px 0 0}
@@ -98,17 +102,24 @@ footer strong{color:var(--gold2);font-size:19px}
 
 <section class="hero" id="home" aria-label="FASHION & BEAUTY">
 <div class="brand-frame">
-<svg class="brand-logo-image" viewBox="0 0 1000 330" role="img" aria-label="FASHION & BEAUTY">
+<span class="logo-shine" aria-hidden="true"></span>
+<svg class="brand-logo-image" viewBox="0 0 1000 330" role="img" aria-label="FASHION & BEAUTY — FB luxury monogram">
 <defs>
- <linearGradient id="brandGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1bd"/><stop offset=".28" stop-color="#d5a94e"/><stop offset=".55" stop-color="#fff0b0"/><stop offset=".78" stop-color="#a9782e"/><stop offset="1" stop-color="#f6d98c"/></linearGradient>
- <filter id="brandGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <linearGradient id="fbGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff4ce"/><stop offset=".25" stop-color="#d5ad61"/><stop offset=".52" stop-color="#fff0b5"/><stop offset=".78" stop-color="#a87932"/><stop offset="1" stop-color="#f8dfa0"/></linearGradient>
+ <filter id="fbSoftGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.5" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 </defs>
-<g fill="url(#brandGold)" filter="url(#brandGlow)" text-anchor="middle">
- <text x="500" y="155" font-family="Georgia,serif" font-size="105" font-weight="bold" letter-spacing="5">FASHION</text>
- <path d="M210 190H790" stroke="url(#brandGold)" stroke-width="3"/>
- <text x="500" y="275" font-family="Georgia,serif" font-size="88" font-weight="bold" letter-spacing="8">BEAUTY</text>
+<g fill="none" stroke="url(#fbGold)" filter="url(#fbSoftGlow)">
+ <circle cx="500" cy="112" r="83" stroke-width="2.2"/>
+ <circle cx="500" cy="112" r="74" stroke-width=".8" opacity=".75"/>
+ <path d="M500 17l9 13-9 13-9-13zM500 181l9 13-9 13-9-13zM405 112l13-9 13 9-13 9zM569 112l13-9 13 9-13 9z" fill="url(#fbGold)" stroke="none"/>
+ <path d="M453 49l10 10M547 49l-10 10M453 175l10-10M547 175l-10-10" stroke-width="1.2"/>
 </g>
-<g fill="#f5d98d"><path d="M155 145l12 26 27 12-27 12-12 27-12-27-27-12 27-12z"/><path d="M845 145l12 26 27 12-27 12-12 27-12-27-27-12 27-12z"/></g>
+<g fill="url(#fbGold)" text-anchor="middle" filter="url(#fbSoftGlow)">
+ <text x="500" y="145" font-family="Georgia,serif" font-size="102" font-style="italic" font-weight="bold" letter-spacing="-13">FB</text>
+ <text x="500" y="260" font-family="Georgia,serif" font-size="51" font-weight="bold" letter-spacing="8">FASHION &amp; BEAUTY</text>
+ <path d="M250 278H750" stroke="url(#fbGold)" stroke-width="1.4" opacity=".85"/>
+ <text x="500" y="307" font-family="Georgia,serif" font-size="15" letter-spacing="8">STYLE • ELEGANCE • BEAUTY</text>
+</g>
 </svg>
 </div>
 </section>
