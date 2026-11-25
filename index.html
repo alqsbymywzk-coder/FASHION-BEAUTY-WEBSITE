@@ -154,6 +154,7 @@ footer strong{color:var(--gold2);font-size:19px}
 }
 
 .vodafone-pay{background:linear-gradient(145deg,#17100f,#090909)!important;border:1px solid #b51d25!important;color:#fff!important}.vodafone-symbol{position:relative;display:block;width:34px;height:34px;border:6px solid #e60000;border-radius:50%;box-shadow:0 0 8px #e6000044}.vodafone-symbol:after{content:"";position:absolute;width:10px;height:9px;left:-7px;bottom:-5px;background:#e60000;border-radius:1px 0 8px 0;transform:rotate(-32deg)}.vodafone-wordmark{font-family:Arial,sans-serif;font-size:16px;line-height:1.1;color:#fff}.vodafone-wordmark span{color:#f0444b}.vodafone-pay small{color:#e7d9d9}
+.instapay-pay{background:linear-gradient(145deg,#17121b,#09080b)!important;border:1px solid #8b4b9f!important;color:#fff!important}.instapay-brand-icon{display:block;width:38px;height:38px;line-height:0;filter:drop-shadow(0 0 5px #f36f3d44)}.instapay-wordmark{font-family:Arial,sans-serif;font-size:15px;letter-spacing:1.3px;color:#f1e6f5}.instapay-pay small{color:#e8dce9}
 </style>
 </head>
 <body>
@@ -226,7 +227,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <section class="payment" id="payment">
 <h3>💳 طرق الدفع</h3>
 <p>اختر طريقة الدفع وحوّل قيمة الطلب، ثم أرفق صورة فاتورة الإيداع لإرسالها مع الطلب للمراجعة اليدوية.</p>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0"><button type="button" class="goldbtn vodafone-pay" onclick="copyVodafoneNumber()" style="min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px"><span class="vodafone-symbol" aria-hidden="true"></span><strong class="vodafone-wordmark">vodafone <span>cash</span></strong><small>اضغط لنسخ رقم التحويل</small></button><a class="goldbtn" href="https://ipn.eg/S/elkasaby90/instapay/4sJAKB" target="_blank" rel="noopener" style="min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">🟣<br><strong>إنستا باي</strong><br><small>اضغط لفتح الدفع</small></a></div><p id="paymentStatus" style="text-align:center;color:#f5dfa0;font-size:12px">رقم فودافون كاش: 01221718109</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0"><button type="button" class="goldbtn vodafone-pay" onclick="copyVodafoneNumber()" style="min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px"><span class="vodafone-symbol" aria-hidden="true"></span><strong class="vodafone-wordmark">vodafone <span>cash</span></strong><small>اضغط لنسخ رقم التحويل</small></button><a class="goldbtn instapay-pay" href="https://ipn.eg/S/elkasaby90/instapay/4sJAKB" target="_blank" rel="noopener" style="min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px"><span class="instapay-brand-icon" aria-hidden="true"><svg viewBox="0 0 52 52" width="34" height="34" xmlns="http://www.w3.org/2000/svg"><rect width="52" height="52" rx="12" fill="#f36f3d"/><path d="M13 17l9 9-9 9M25 17l9 9-9 9" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong class="instapay-wordmark">INSTAPAY</strong><small>اضغط لفتح الدفع</small></a></div><p id="paymentStatus" style="text-align:center;color:#f5dfa0;font-size:12px">اضغط على أيقونة فودافون كاش لنسخ رقم التحويل.</p>
 <label for="paymentMethod">طريقة الدفع</label>
 <select id="paymentMethod">
 <option value="">اختر طريقة الدفع</option>
@@ -441,7 +442,7 @@ document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
 document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
 }
 function removeItem(i){cart.splice(i,1);save()}
-function copyVodafoneNumber(){const n="01221718109";const t=document.createElement("textarea");t.value=n;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();document.getElementById("paymentStatus").textContent="تم نسخ رقم فودافون كاش: "+n+" — أكمل التحويل من فودافون كاش.";document.getElementById("paymentMethod").value="فودافون كاش";}
+function copyVodafoneNumber(){const n="01221718109";const t=document.createElement("textarea");t.value=n;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();document.getElementById("paymentStatus").textContent="تم نسخ رقم فودافون كاش بنجاح. أكمل التحويل من محفظتك.";document.getElementById("paymentMethod").value="فودافون كاش";}
 function chooseReceipt(source){
 const input=document.getElementById("receiptImage");
 if(source==="camera"){input.setAttribute("capture","environment");}
