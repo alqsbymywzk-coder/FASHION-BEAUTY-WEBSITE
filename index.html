@@ -731,16 +731,29 @@ let fbClockOffsetMs=0,fbClockBasePerf=0,fbClockSynced=false,fbClockZone=Intl.Dat
 async function syncFashionClock(){
   const started=performance.now();
   try{
-    const response=await fetch("https://utctime.app/api/now/"+encodeURIComponent(fbClockZone),{cache:"no-store"});
-    if(!response.ok)throw new Error("clock service "+response.status);
-    const data=await response.json();
-    const serverUtc=Number.isFinite(data.unix_ms)?data.unix_ms:(Number(data.unix)*1000);
+    let data=null;
+    let networkLocated=false;
+    try{
+      const ipResponse=await fetch("https://gateway.timeapi.world/ip",{cache:"no-store"});
+      if(ipResponse.ok){
+        const ipData=await ipResponse.json();
+        if(ipData.timezone&&ipData.datetime){data={timezone:ipData.timezone,unix:Number(ipData.unixtime)||Date.parse(ipData.datetime)/1000};networkLocated=true;}
+      }
+    }catch(ipError){}
+    if(!data){
+      const zoneResponse=await fetch("https://utctime.app/api/now/"+encodeURIComponent(fbClockZone),{cache:"no-store"});
+      if(!zoneResponse.ok)throw new Error("clock service "+zoneResponse.status);
+      const zoneData=await zoneResponse.json();
+      data={timezone:zoneData.timezone||fbClockZone,unix:Number(zoneData.unix_ms)/1000||Number(zoneData.unix)};
+    }
+    if(data.timezone)fbClockZone=data.timezone;
+    const serverUtc=Number(data.unix)*1000;
     if(!Number.isFinite(serverUtc))throw new Error("invalid clock response");
     const elapsed=performance.now()-started;
     fbClockOffsetMs=serverUtc+elapsed/2-Date.now();
     fbClockBasePerf=performance.now();
     fbClockSynced=true;
-    document.getElementById("clockSyncState").textContent="متزامنة مع الشبكة • "+fbClockZone;
+    document.getElementById("clockSyncState").textContent=networkLocated?"مزامنة الشبكة • "+fbClockZone:"مزامنة الوقت • "+fbClockZone;
   }catch(error){
     fbClockSynced=false;
     document.getElementById("clockSyncState").textContent="توقيت الجهاز • "+fbClockZone;
