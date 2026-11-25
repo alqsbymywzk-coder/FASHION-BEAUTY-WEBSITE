@@ -302,7 +302,7 @@ if(!image){alert("لا يمكن حفظ منتج من غير صورة خاصة ب
 const isFashion=["رجالي","حريمي","أطفال"].includes(cat);
 if(isFashion&&(!sizes.length||!colors.length)){alert("أدخل المقاسات والألوان المتاحة لمنتج الملابس.");return;}
 const item={name,cat,price,code,icon:"🛍️",image,popular:document.getElementById("adminPopular").checked,sizes:isFashion?sizes:[],colors:isFashion?colors:[]};
-if(editIndex>=0)products[editIndex]=item;else{if(products.length>=24){alert("المجلة تستوعب 24 منتجًا فقط. احذف منتجًا أولاً لإضافة غيره.");return;}products.push(item);}
+if(editIndex>=0)products[editIndex]=item;else{if(products.length>=24){alert("المجلة تستوعب 24 منتجًا فقط. احذف منتجًا أولاً لإضافة غيره.");return;}products.unshift(item);}
 try{localStorage.setItem("fb_products",JSON.stringify(products))}catch(err){alert("مساحة التخزين المحلية غير كافية. استخدم صورة أصغر.");return}
 resetAdminForm();render();renderMagazine();renderAdminProducts();
 alert("تم حفظ المنتج في هذا المتصفح.");
