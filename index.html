@@ -195,6 +195,19 @@ footer strong{color:#e6c36e;font-size:19px}
 #products .heading{margin:10px 0 18px;text-align:right}
 #products .products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 @media(min-width:650px){#products .products{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}}
+
+/* LOGO HERO + PROFESSIONAL MULTICOLOR LIGHT FRAME */
+.hero{max-width:1240px!important;margin:22px auto!important;padding:12px!important;min-height:0!important;aspect-ratio:3.05/1!important;border:0!important;border-radius:0!important;background:transparent!important;overflow:visible!important}
+.hero>div{width:100%!important;display:block!important}
+.brand-frame{position:relative;width:100%;height:100%;min-height:190px;aspect-ratio:3.05/1;display:flex;align-items:center;justify-content:center;padding:10px;background:#090909;isolation:isolate;overflow:hidden}
+.brand-frame:before{content:"";position:absolute;inset:0;padding:3px;background:conic-gradient(from 0deg,#f6d98d,#fff5cb,#b98b3b,#75d9ff,#a98aff,#ff8fc8,#f6d98d);animation:frameGlow 5s linear infinite,framePulse 2.4s ease-in-out infinite;z-index:-2}
+.brand-frame:after{content:"";position:absolute;inset:3px;background:radial-gradient(ellipse at center,#20190d 0%,#0b0a08 72%);z-index:-1;box-shadow:inset 0 0 38px #d6ad5525}
+.brand-logo-image{display:block;width:100%;height:100%;max-height:300px;object-fit:contain;filter:drop-shadow(0 0 12px #e5bf6b66);animation:logoBreath 3s ease-in-out infinite}
+@keyframes frameGlow{to{filter:hue-rotate(360deg)}}
+@keyframes framePulse{0%,100%{opacity:.55;box-shadow:0 0 8px #e5c16d66,0 0 18px #d6ad5533}50%{opacity:1;box-shadow:0 0 16px #fff0bd,0 0 34px #65d9ff88,0 0 52px #d58aff55}}
+@keyframes logoBreath{0%,100%{filter:drop-shadow(0 0 8px #e5bf6b55)}50%{filter:drop-shadow(0 0 19px #f5d98d99)}}
+@media(max-width:520px){.hero{margin:18px 12px!important;padding:8px!important}.brand-frame{min-height:150px;aspect-ratio:2.5/1;padding:7px}.brand-logo-image{max-height:210px}}
+
 </style>
 </head>
 <body>
@@ -213,11 +226,20 @@ footer strong{color:#e6c36e;font-size:19px}
 <a href="#cart" onclick="openCart(event)" aria-label="فتح سلة التسوق">🛒 السلة <span id="count">0</span></a>
 </nav>
 
-<section class="hero" id="home">
-<div>
-<div class="animated-brand" role="img" aria-label="FASHION AND BEAUTY logo with moving golden light"><span>FASHION &amp; BEAUTY</span><small>STYLE • ELEGANCE • BEAUTY</small></div>
-<p>اكتشف عالم الأناقة والجمال<br>اختيارات مميزة لك ولأسرتك<br>الجودة والأناقة في مكان واحد</p>
-<a href="#products" class="goldbtn">تسوق الآن</a>
+<section class="hero" id="home" aria-label="FASHION & BEAUTY">
+<div class="brand-frame">
+<svg class="brand-logo-image" viewBox="0 0 1000 330" role="img" aria-label="FASHION & BEAUTY">
+<defs>
+ <linearGradient id="brandGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1bd"/><stop offset=".28" stop-color="#d5a94e"/><stop offset=".55" stop-color="#fff0b0"/><stop offset=".78" stop-color="#a9782e"/><stop offset="1" stop-color="#f6d98c"/></linearGradient>
+ <filter id="brandGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g fill="url(#brandGold)" filter="url(#brandGlow)" text-anchor="middle">
+ <text x="500" y="155" font-family="Georgia,serif" font-size="105" font-weight="bold" letter-spacing="5">FASHION</text>
+ <path d="M210 190H790" stroke="url(#brandGold)" stroke-width="3"/>
+ <text x="500" y="275" font-family="Georgia,serif" font-size="88" font-weight="bold" letter-spacing="8">BEAUTY</text>
+</g>
+<g fill="#f5d98d"><path d="M155 145l12 26 27 12-27 12-12 27-12-27-27-12 27-12z"/><path d="M845 145l12 26 27 12-27 12-12 27-12-27-27-12 27-12z"/></g>
+</svg>
 </div>
 </section>
 
@@ -248,39 +270,11 @@ footer strong{color:#e6c36e;font-size:19px}
   <div class="detail-info"><span class="detail-kicker">FASHION & BEAUTY</span><h2 id="detailName"></h2><p id="detailCategory"></p><strong id="detailPrice"></strong><button class="detail-add" id="detailAdd">أضيفيه إلى السلة</button></div>
  </div>
 </div>
-<section class="section" id="categories">
-<h2 class="heading">أقسام متجرنا</h2>
-<p class="desc">اختار القسم المفضل لديك</p>
-<div class="categories">
-<button class="cat" onclick="filter('رجالي')">👔 رجالي</button>
-<button class="cat" onclick="filter('حريمي')">👗 حريمي</button>
-<button class="cat" onclick="filter('أطفال')">🧸 أطفال</button>
-<button class="cat" onclick="filter('إكسسوارات')">💍 إكسسوارات</button>
-<button class="cat" onclick="filter('عطور')">🌹 عطور</button>
-<button class="cat" onclick="filter('تجميل')">💄 مستحضرات تجميل</button>
-</div>
-</section>
 
-<section class="section" id="products">
-<h2 class="heading">كل المنتجات</h2>
-<p class="desc">تسوق أحدث اختياراتنا</p>
-<input class="search" id="search" placeholder="ابحث عن منتج..." oninput="render()">
-<div class="filters">
-<button class="active" onclick="filter('الكل',this)">الكل</button>
-<button onclick="filter('رجالي',this)">رجالي</button>
-<button onclick="filter('حريمي',this)">حريمي</button>
-<button onclick="filter('أطفال',this)">أطفال</button>
-<button onclick="filter('إكسسوارات',this)">إكسسوارات</button>
-<button onclick="filter('عطور',this)">عطور</button>
-<button onclick="filter('تجميل',this)">تجميل</button>
-</div>
-<div class="products" id="productsList"></div>
-</section>
 
-<section class="banner" id="offers">
-<h2>✨ عروض فاشون اند بيوتي ✨</h2>
-<p>اكتشف تشكيلتنا المميزة واستمتع بتجربة تسوق أنيقة<br>تابعنا باستمرار لمعرفة أحدث العروض والمنتجات</p>
-</section>
+
+
+
 
 
 
