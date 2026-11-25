@@ -48,8 +48,17 @@ button,input,select{font:inherit}
 .add,.goldbtn{display:inline-block;background:linear-gradient(110deg,#a77b2e,#f1d78a,#a77b2e);color:#171109;padding:11px 16px;border:0;border-radius:7px;font-weight:bold;cursor:pointer}
 .add{width:100%;margin-top:11px}.product-cart-icon{width:46px;height:42px;display:flex;align-items:center;justify-content:center;margin:11px auto 0;font-size:23px;padding:0;border:1px solid #f1d78a;box-shadow:0 0 10px #d9b66b33}
 .empty{grid-column:1/-1;text-align:center;color:#aaa;padding:30px}
-.cartbox{display:none;width:min(760px,calc(100% - 28px));margin:18px auto;padding:18px;background:#15130f;border:1px solid #5b4827;border-radius:10px}
-.cartbox.open{display:block;animation:detailPop .25s ease}
+.cartbox{display:none;position:fixed;inset:0;z-index:1200;width:100%;height:100dvh;max-height:100dvh;overflow-y:auto;margin:0;padding:18px 14px 28px;background:#090909f5;backdrop-filter:blur(9px);border:0;border-radius:0}
+.cartbox.open{display:block;animation:veilIn .2s ease}
+.cart-inner{width:min(760px,100%);margin:0 auto;padding:18px;background:#15130f;border:1px solid #5b4827;border-radius:12px;box-shadow:0 12px 40px #000}
+.cart-qty{display:flex;align-items:center;gap:7px;margin-top:8px}
+.cart-qty button{min-width:32px;height:32px;border:1px solid #80612c;border-radius:6px;background:#211a10;color:#f5dfa0;font-weight:bold;font-size:18px;cursor:pointer}
+.cart-qty .qty-number{min-width:24px;text-align:center;color:#fff;font-weight:bold}
+.cartline{display:block;padding:12px 0;border-bottom:1px solid #333}
+.cartline-main{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.cartline-main>span:first-child{flex:1}
+.cartline-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cartline .remove-item{color:#ff9a8f;border:1px solid #6d342d;border-radius:5px;padding:5px 9px;background:#291512}
 .cartbox h3,.payment h3{color:var(--gold2);margin-bottom:12px}
 .cart-close{float:left;background:#302719;color:#f1d58c;border:1px solid #80612c;border-radius:6px;padding:7px 12px;cursor:pointer}
 .cartline{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #333;font-size:13px}
@@ -221,7 +230,7 @@ footer strong{color:var(--gold2);font-size:19px}
 
 
 <section class="cartbox" id="cart">
-<button class="cart-close" type="button" onclick="closeCart()">إغلاق ✕</button><h3>🛒 سلة مشترياتك</h3>
+<div class="cart-inner"><button class="cart-close" type="button" onclick="closeCart()">إغلاق ✕</button><h3>🛒 سلة مشترياتك</h3>
 <div id="cartItems">السلة فارغة حاليًا</div>
 <p style="margin-top:15px;color:#e6c36e">الإجمالي: <span id="total">0</span></p>
 <section class="payment" id="payment">
@@ -245,7 +254,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <p class="hint">تنبيه: سيتم مراجعة صورة الإيداع يدويًا قبل تأكيد الطلب.</p>
 </section>
 <button class="goldbtn" onclick="order()">إتمام الطلب عبر واتساب</button>
-</section>
+</div></section>
 
 
 <button class="admin-entry" type="button" onclick="toggleAdmin()">⚙️ إدارة المنتجات</button>
@@ -377,8 +386,8 @@ localStorage.setItem("fb_products",JSON.stringify(products));
 render();renderMagazine();renderAdminProducts();
 }
 
-function openCart(e){if(e)e.preventDefault();const box=document.getElementById("cart");if(!box.classList.contains("open"))history.pushState({fbView:"cart"},"","#cart");box.classList.add("open");box.scrollIntoView({behavior:"smooth",block:"start"});}
-function closeCart(){if(history.state&&history.state.fbView==="cart")history.go(-1);else document.getElementById("cart").classList.remove("open");}
+function openCart(e){if(e)e.preventDefault();const box=document.getElementById("cart");if(!box.classList.contains("open"))history.pushState({fbView:"cart"},"","#cart");box.classList.add("open");document.body.style.overflow="hidden";save();}
+function closeCart(){const box=document.getElementById("cart");box.classList.remove("open");document.body.style.overflow="";if(history.state&&history.state.fbView==="cart")history.go(-1);}
 function openProduct(i){
 const p=products[i];if(!p)return;
 document.getElementById("detailArt").innerHTML=p.image?'<img src="'+p.image+'" alt="'+p.name+'">':p.icon;
@@ -438,9 +447,10 @@ function save(){
 localStorage.setItem("fb_cart",JSON.stringify(cart));
 document.getElementById("count").textContent=cart.reduce((s,p)=>s+p.qty,0);
 document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
-<div class="cartline"><span>${p.name}${p.size?" — المقاس: "+p.size:""}${p.color?" — اللون: "+p.color:""} × ${p.qty}</span><span>${p.price*p.qty} جنيه <button onclick="removeItem(${i})">حذف</button></span></div>`).join(""):"السلة فارغة حاليًا";
+<div class="cartline"><div class="cartline-main"><span>${p.name}${p.size?" — المقاس: "+p.size:""}${p.color?" — اللون: "+p.color:""}</span><strong>${p.price*p.qty} جنيه</strong></div><div class="cartline-actions"><div class="cart-qty"><button type="button" onclick="changeQty(${i},-1)" aria-label="تقليل الكمية">−</button><span class="qty-number">${p.qty}</span><button type="button" onclick="changeQty(${i},1)" aria-label="زيادة الكمية">+</button></div><button class="remove-item" type="button" onclick="removeItem(${i})">حذف المنتج</button></div></div>`).join(""):"السلة فارغة حاليًا";
 document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
 }
+function changeQty(i,delta){if(!cart[i])return;cart[i].qty+=delta;if(cart[i].qty<=0)cart.splice(i,1);save();}
 function removeItem(i){cart.splice(i,1);save()}
 function copyVodafoneNumber(){const n="01221718109";const t=document.createElement("textarea");t.value=n;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();document.getElementById("paymentStatus").textContent="تم نسخ رقم فودافون كاش بنجاح. أكمل التحويل من محفظتك.";document.getElementById("paymentMethod").value="فودافون كاش";}
 function chooseReceipt(source){
