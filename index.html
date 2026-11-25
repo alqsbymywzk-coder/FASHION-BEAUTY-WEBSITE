@@ -372,7 +372,7 @@ footer strong{color:var(--gold2);font-size:19px}
     <div class="gold-ticker-track"><div class="gold-ticker-line">
       <span>سعر جرام الذهب العالمي</span>
       <strong id="goldSpotPrice" class="gold-ticker-price">جارٍ تحميل السعر...</strong>
-      <span>دينار كويتي / جرام</span>
+      <span>جنيه مصري / جرام</span>
     </div></div>
     <div id="goldSpotUpdated" class="gold-ticker-meta">يتم تحديث السعر تلقائيًا عند وصول بيانات جديدة</div>
   </div>
@@ -774,13 +774,13 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)syncFashio
 
 /* Global spot gold: free public feed, KWD per gram, refreshed once per minute */
 function formatGoldKwd(value){
-  return new Intl.NumberFormat("ar-KW",{style:"currency",currency:"KWD",minimumFractionDigits:3,maximumFractionDigits:3}).format(value);
+  return new Intl.NumberFormat("ar-KW",{style:"currency",currency:"EGP",minimumFractionDigits:3,maximumFractionDigits:3}).format(value);
 }
 async function refreshGlobalGold(){
   const priceNode=document.getElementById("goldSpotPrice");
   const updatedNode=document.getElementById("goldSpotUpdated");
   try{
-    const response=await fetch("https://xaus.com/api/v1/spot?currency=KWD&unit=gram",{cache:"no-store"});
+    const response=await fetch("https://xaus.com/api/v1/spot?currency=EGP&unit=gram",{cache:"no-store"});
     if(!response.ok)throw new Error("gold feed "+response.status);
     const data=await response.json();
     const price=Number(data&&data.xau&&data.xau.price);
