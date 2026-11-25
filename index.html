@@ -88,7 +88,7 @@ footer strong{color:var(--gold2);font-size:19px}
 .detail-info{text-align:center;padding:20px}
 .detail-kicker{font-size:10px;letter-spacing:2px;color:var(--gold)}
 .detail-info h2{color:#f4dfaa;font-size:22px;margin:10px 0}
-.detail-info p{color:#a99b7f;font-size:12px;margin-bottom:10px}
+.detail-info p{color:#a99b7f;font-size:12px;margin-bottom:10px}.variant-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;text-align:right}.variant-fields label{display:block;color:#e8d29b;font-size:12px;margin-bottom:5px}.variant-fields select{width:100%;padding:11px;background:#17130d;border:1px solid #9b7839;border-radius:7px;color:#fff}.variant-fields[hidden]{display:none}
 .detail-info strong{display:block;color:#edca79;font-size:20px}
 .detail-add{width:100%;margin-top:18px;padding:14px;border:0;border-radius:7px;background:linear-gradient(110deg,#a77b2e,#f3dc9b,#a77b2e);color:#171109;font-weight:bold;font-size:15px;cursor:pointer}
 @keyframes veilIn{from{opacity:0}to{opacity:1}}
@@ -148,7 +148,7 @@ footer strong{color:var(--gold2);font-size:19px}
  <div class="product-detail" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
   <button class="detail-close" onclick="closeProduct()" aria-label="إغلاق">×</button>
   <div class="detail-art" id="detailArt"></div>
-  <div class="detail-info"><span class="detail-kicker">FASHION & BEAUTY</span><h2 id="detailName"></h2><p id="detailCategory"></p><strong id="detailPrice"></strong><button class="detail-add" id="detailAdd">أضيفيه إلى السلة</button></div>
+  <div class="detail-info"><span class="detail-kicker">FASHION & BEAUTY</span><h2 id="detailName"></h2><p id="detailCategory"></p><strong id="detailPrice"></strong><div class="variant-fields" id="variantFields" hidden><div><label for="detailSize">اختار المقاس</label><select id="detailSize"></select></div><div><label for="detailColor">اختار اللون</label><select id="detailColor"></select></div></div><button class="detail-add" id="detailAdd">أضف إلى السلة</button></div>
  </div>
 </div>
 
@@ -198,7 +198,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <label for="adminName">اسم المنتج</label><input id="adminName" required maxlength="90" placeholder="اسم المنتج">
 <label for="adminPrice">السعر</label><input id="adminPrice" type="number" min="0" step="0.01" required placeholder="السعر">
 <label for="adminCategory">القسم</label><select id="adminCategory"><option>رجالي</option><option>حريمي</option><option>أطفال</option><option>إكسسوارات</option><option>عطور</option><option>تجميل</option></select>
-<label for="adminImage">صورة المنتج</label><input id="adminImage" type="file" accept="image/*">
+<div id="adminVariants"><label for="adminSizes">المقاسات المتاحة (افصل بينها بفاصلة)</label><input id="adminSizes" placeholder="S, M, L, XL"><label for="adminColors">الألوان المتاحة (افصل بينها بفاصلة)</label><input id="adminColors" placeholder="أسود, أبيض, بيج"><p style="color:#aaa;font-size:11px;margin-top:5px">تظهر اختيارات المقاس واللون لمنتجات الملابس فقط.</p></div><label for="adminImage">صورة المنتج</label><input id="adminImage" type="file" accept="image/*">
 <label style="display:flex;align-items:center;gap:8px"><input id="adminPopular" type="checkbox" style="width:auto"> عرض ضمن الأكثر طلبًا</label>
 <div class="admin-actions"><button type="submit" id="adminSaveBtn">حفظ المنتج</button><button type="button" onclick="resetAdminForm()" style="background:#444;color:#fff">إلغاء</button></div>
 </form>
@@ -240,6 +240,8 @@ document.getElementById("adminEditIndex").value=String(i);
 document.getElementById("adminName").value=p.name||"";
 document.getElementById("adminPrice").value=p.price||0;
 document.getElementById("adminCategory").value=p.cat||"رجالي";
+document.getElementById("adminSizes").value=(p.sizes||[]).join(", ");
+document.getElementById("adminColors").value=(p.colors||[]).join(", ");
 document.getElementById("adminPopular").checked=!!p.popular;
 document.getElementById("adminSaveBtn").textContent="حفظ التعديلات";
 document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
@@ -249,6 +251,8 @@ e.preventDefault();
 const name=document.getElementById("adminName").value.trim();
 const price=Number(document.getElementById("adminPrice").value);
 const cat=document.getElementById("adminCategory").value;
+const sizes=document.getElementById("adminSizes").value.split(",").map(x=>x.trim()).filter(Boolean);
+const colors=document.getElementById("adminColors").value.split(",").map(x=>x.trim()).filter(Boolean);
 const file=document.getElementById("adminImage").files[0];
 const editIndex=Number(document.getElementById("adminEditIndex").value);
 let image=editIndex>=0?(products[editIndex].image||""):"";
@@ -258,7 +262,9 @@ if(file.size>1200000){alert("الصورة كبيرة. اختار صورة أقل
 image=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});
 }
 if(!image){alert("لا يمكن حفظ منتج من غير صورة خاصة به.");return}
-const item={name,cat,price,icon:"🛍️",image,popular:document.getElementById("adminPopular").checked};
+const isFashion=["رجالي","حريمي","أطفال"].includes(cat);
+if(isFashion&&(!sizes.length||!colors.length)){alert("أدخل المقاسات والألوان المتاحة لمنتج الملابس.");return;}
+const item={name,cat,price,icon:"🛍️",image,popular:document.getElementById("adminPopular").checked,sizes:isFashion?sizes:[],colors:isFashion?colors:[]};
 if(editIndex>=0)products[editIndex]=item;else{if(products.length>=24){alert("المجلة تستوعب 24 منتجًا فقط. احذف منتجًا أولاً لإضافة غيره.");return;}products.push(item);}
 try{localStorage.setItem("fb_products",JSON.stringify(products))}catch(err){alert("مساحة التخزين المحلية غير كافية. استخدم صورة أصغر.");return}
 resetAdminForm();render();renderMagazine();renderAdminProducts();
@@ -279,10 +285,14 @@ document.getElementById("detailArt").innerHTML=p.image?'<img src="'+p.image+'" a
 document.getElementById("detailName").textContent=p.name;
 document.getElementById("detailCategory").textContent=p.cat;
 document.getElementById("detailPrice").textContent=p.price+" جنيه";
-document.getElementById("detailAdd").onclick=function(){add(p.name);closeProduct();};
+const hasVariants=["رجالي","حريمي","أطفال"].includes(p.cat);
+const fields=document.getElementById("variantFields");fields.hidden=!hasVariants;
+const sizeSelect=document.getElementById("detailSize"),colorSelect=document.getElementById("detailColor");
+sizeSelect.innerHTML=(p.sizes||[]).map(v=>'<option value="'+v+'">'+v+'</option>').join("");
+colorSelect.innerHTML=(p.colors||[]).map(v=>'<option value="'+v+'">'+v+'</option>').join("");
+document.getElementById("detailAdd").onclick=function(){if(hasVariants&&(!sizeSelect.value||!colorSelect.value)){alert("اختار المقاس واللون أولاً.");return;}add(p.name,hasVariants?sizeSelect.value:"",hasVariants?colorSelect.value:"");closeProduct();};
 if(!document.getElementById("productLightbox").classList.contains("show"))history.pushState({fbView:"product"},"","#product");
-document.getElementById("productLightbox").classList.add("show");
-document.body.style.overflow="hidden";
+document.getElementById("productLightbox").classList.add("show");document.body.style.overflow="hidden";
 }
 function closeProduct(){if(history.state&&history.state.fbView==="product")history.go(-1);else{document.getElementById("productLightbox").classList.remove("show");document.body.style.overflow="";}}
 window.addEventListener("popstate",function(){document.getElementById("productLightbox").classList.remove("show");document.getElementById("cart").classList.remove("open");document.body.style.overflow="";});
@@ -315,19 +325,19 @@ document.getElementById("productsList").innerHTML=list.length?list.slice(0,24).m
 <div class="info">
 <h3>${p.name}</h3>
 <div class="price">${p.price} <small>جنيه</small></div>
-<button class="add" onclick="add('${p.name}')">أضف إلى السلة</button>
+<button class="add" onclick="openProduct(${products.indexOf(p)})">اختار المقاس واللون</button>
 </div></div>`).join(""):'<div class="empty">لا توجد منتجات مطابقة للبحث</div>';
 }
-function add(name){
-let item=cart.find(x=>x.name===name);
-if(item)item.qty++;else cart.push({name,qty:1,price:products.find(p=>p.name===name).price});
+function add(name,size="",color=""){
+let item=cart.find(x=>x.name===name&&x.size===size&&x.color===color);
+if(item)item.qty++;else cart.push({name,qty:1,price:products.find(p=>p.name===name).price,size,color});
 save();
 }
 function save(){
 localStorage.setItem("fb_cart",JSON.stringify(cart));
 document.getElementById("count").textContent=cart.reduce((s,p)=>s+p.qty,0);
 document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
-<div class="cartline"><span>${p.name} × ${p.qty}</span><span>${p.price*p.qty} جنيه <button onclick="removeItem(${i})">حذف</button></span></div>`).join(""):"السلة فارغة حاليًا";
+<div class="cartline"><span>${p.name}${p.size?" — المقاس: "+p.size:""}${p.color?" — اللون: "+p.color:""} × ${p.qty}</span><span>${p.price*p.qty} جنيه <button onclick="removeItem(${i})">حذف</button></span></div>`).join(""):"السلة فارغة حاليًا";
 document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
 }
 function removeItem(i){cart.splice(i,1);save()}
@@ -350,7 +360,7 @@ if(!method){alert("اختر طريقة الدفع أولاً");document.getEleme
 if(!receipt){alert("أرفق صورة فاتورة الإيداع أولاً");receiptInput.focus();return}
 if(!receipt.type.startsWith("image/")){alert("من فضلك اختر صورة فقط");receiptInput.value="";return}
 const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
-const lines=cart.map(p=>p.name+" × "+p.qty+" = "+p.price*p.qty+" جنيه").join("\n");
+const lines=cart.map(p=>p.name+(p.size?" — المقاس: "+p.size:"")+(p.color?" — اللون: "+p.color:"")+" × "+p.qty+" = "+p.price*p.qty+" جنيه").join("\n");
 const msg="طلب جديد من FASHION & BEAUTY\n"+lines+"\nالإجمالي: "+total+" جنيه\nطريقة الدفع: "+method+"\nمرفق صورة فاتورة الإيداع للمراجعة اليدوية.";
 if(navigator.share && navigator.canShare && navigator.canShare({files:[receipt]})){
  try{
