@@ -48,6 +48,11 @@ button,input,select{font:inherit}
 .add,.goldbtn{display:inline-block;background:linear-gradient(110deg,#a77b2e,#f1d78a,#a77b2e);color:#171109;padding:11px 16px;border:0;border-radius:7px;font-weight:bold;cursor:pointer}
 .add{width:100%;margin-top:11px}.product-cart-icon{width:46px;height:42px;display:flex;align-items:center;justify-content:center;margin:11px auto 0;font-size:23px;padding:0;border:1px solid #f1d78a;box-shadow:0 0 10px #d9b66b33}
 .empty{grid-column:1/-1;text-align:center;color:#aaa;padding:30px}
+.magazine-pagination{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:7px;margin:22px auto 8px;direction:rtl}
+.magazine-page{min-width:38px;height:38px;padding:0 10px;border:1px solid #80612c;border-radius:10px;background:linear-gradient(145deg,#211a10,#100e0b);color:#f5dfa0;font-weight:bold;cursor:pointer}
+.magazine-page.active{background:linear-gradient(145deg,#f5dfa0,#a77b2e);color:#171109;border-color:#f5dfa0;box-shadow:0 0 13px #d9b66b55}
+.magazine-page:disabled{opacity:.35;cursor:not-allowed}
+.magazine-page-info{width:100%;text-align:center;color:#bca77c;font-size:11px;margin-top:3px}
 .cartbox{display:none;position:fixed;inset:0;z-index:1200;width:100%;height:100dvh;max-height:100dvh;overflow-y:auto;margin:0;padding:18px 14px 28px;background:#090909f5;backdrop-filter:blur(9px);border:0;border-radius:0}
 .cartbox.open{display:block;animation:veilIn .2s ease}
 .cart-inner{width:min(760px,100%);margin:0 auto;padding:18px;background:#15130f;border:1px solid #5b4827;border-radius:12px;box-shadow:0 12px 40px #000}
@@ -316,7 +321,6 @@ footer strong{color:var(--gold2);font-size:19px}
     <button class="icon-category" type="button" onclick="filter('حريمي',this)" aria-label="حريمي" title="حريمي">👗</button>
     <button class="icon-category" type="button" onclick="filter('أطفال',this)" aria-label="أطفال" title="أطفال">🧸</button>
     <button class="icon-category" type="button" onclick="filter('إكسسوارات',this)" aria-label="إكسسوارات" title="إكسسوارات">💎</button>
-    <button class="icon-category" type="button" onclick="filter('عطور',this)" aria-label="عطور" title="عطور">🌹</button>
     <button class="icon-category" type="button" onclick="filter('تجميل',this)" aria-label="تجميل" title="تجميل">💄</button>
     <button class="icon-category" type="button" onclick="filter('أدوات منزلية',this)" aria-label="أدوات منزلية" title="أدوات منزلية">🏠</button>
   </div>
@@ -328,6 +332,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <section class="section" id="products">
   <div class="products-heading"><h2 class="heading">منتجاتنا</h2><button class="cart-shortcut" type="button" onclick="openCart(event)">🛒 السلة <span id="count">0</span></button></div>
   <div class="products" id="productsList"></div>
+  <nav class="magazine-pagination" id="magazinePagination" aria-label="صفحات المجلة"></nav>
 </section>
 <div class="product-lightbox" id="productLightbox" onclick="if(event.target===this)closeProduct()">
  <div class="product-detail" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
@@ -390,7 +395,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <label for="adminName">اسم المنتج</label><input id="adminName" required maxlength="90" placeholder="اسم المنتج">
 <label for="adminPrice">السعر</label><input id="adminPrice" type="number" min="0" step="0.01" required placeholder="السعر">
 <label for="adminCode">كود المنتج</label><input id="adminCode" type="text" maxlength="40" placeholder="مثال: FB-001">
-<label for="adminCategory">القسم</label><select id="adminCategory"><option>رجالي</option><option>حريمي</option><option>أطفال</option><option>إكسسوارات</option><option>عطور</option><option>تجميل</option><option>أدوات منزلية</option></select>
+<label for="adminCategory">القسم</label><select id="adminCategory"><option>رجالي</option><option>حريمي</option><option>أطفال</option><option>إكسسوارات</option><option>تجميل</option><option>أدوات منزلية</option></select>
 <div id="adminVariants"><label>حدد المقاسات المتوفرة لهذا المنتج</label><div id="adminSizeOptions" class="admin-choice-grid"><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="L"> L</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XL"> XL</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XXL"> XXL</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XXXL"> XXXL</label><label class="admin-choice"><input type="checkbox" name="adminSizeChoice" value="XXXXL"> XXXXL</label></div><label>حدد الألوان المتوفرة لهذا المنتج</label><div id="adminColorOptions" class="admin-choice-grid"><label class="admin-choice admin-color-choice" style="color:#111111"><input type="checkbox" name="adminColorChoice" value="أسود"><span class="color-dot" style="background:#111111"></span><span>أسود</span></label><label class="admin-choice admin-color-choice" style="color:#f5dfa0"><input type="checkbox" name="adminColorChoice" value="أبيض"><span class="color-dot" style="background:#ffffff"></span><span>أبيض</span></label><label class="admin-choice admin-color-choice" style="color:#f5dfa0"><input type="checkbox" name="adminColorChoice" value="بيج"><span class="color-dot" style="background:#d8c3a5"></span><span>بيج</span></label><label class="admin-choice admin-color-choice" style="color:#e53935"><input type="checkbox" name="adminColorChoice" value="أحمر"><span class="color-dot" style="background:#e53935"></span><span>أحمر</span></label><label class="admin-choice admin-color-choice" style="color:#1976d2"><input type="checkbox" name="adminColorChoice" value="أزرق"><span class="color-dot" style="background:#1976d2"></span><span>أزرق</span></label><label class="admin-choice admin-color-choice" style="color:#172554"><input type="checkbox" name="adminColorChoice" value="كحلي"><span class="color-dot" style="background:#172554"></span><span>كحلي</span></label><label class="admin-choice admin-color-choice" style="color:#218c45"><input type="checkbox" name="adminColorChoice" value="أخضر"><span class="color-dot" style="background:#218c45"></span><span>أخضر</span></label><label class="admin-choice admin-color-choice" style="color:#65733b"><input type="checkbox" name="adminColorChoice" value="زيتي"><span class="color-dot" style="background:#65733b"></span><span>زيتي</span></label><label class="admin-choice admin-color-choice" style="color:#795548"><input type="checkbox" name="adminColorChoice" value="بني"><span class="color-dot" style="background:#795548"></span><span>بني</span></label><label class="admin-choice admin-color-choice" style="color:#9e9e9e"><input type="checkbox" name="adminColorChoice" value="رمادي"><span class="color-dot" style="background:#9e9e9e"></span><span>رمادي</span></label><label class="admin-choice admin-color-choice" style="color:#ec78ad"><input type="checkbox" name="adminColorChoice" value="وردي"><span class="color-dot" style="background:#ec78ad"></span><span>وردي</span></label><label class="admin-choice admin-color-choice" style="color:#f5dfa0"><input type="checkbox" name="adminColorChoice" value="أصفر"><span class="color-dot" style="background:#f4d03f"></span><span>أصفر</span></label><label class="admin-choice admin-color-choice" style="color:#8e44ad"><input type="checkbox" name="adminColorChoice" value="بنفسجي"><span class="color-dot" style="background:#8e44ad"></span><span>بنفسجي</span></label><label class="admin-choice admin-color-choice" style="color:#f28c28"><input type="checkbox" name="adminColorChoice" value="برتقالي"><span class="color-dot" style="background:#f28c28"></span><span>برتقالي</span></label></div><p style="color:#aaa;font-size:11px;margin-top:5px">ضع علامة أمام كل مقاس ولون متوفر فعليًا. العميل لن يرى إلا الاختيارات التي تحددها هنا.</p></div><label for="adminImage">صور المنتج (يمكن اختيار عدة صور مرة واحدة)</label><input id="adminImage" type="file" accept="image/*" multiple><p style="color:#aaa;font-size:11px;margin-top:5px">اختر حتى 6 صور، كل صورة أقل من 1.2 ميجابايت. الصور الإضافية ستظهر داخل عرض المنتج بالتمرير.</p>
 <label style="display:flex;align-items:center;gap:8px"><input id="adminPopular" type="checkbox" style="width:auto"> عرض ضمن الأكثر طلبًا</label>
 <div class="admin-actions"><button type="submit" id="adminSaveBtn">حفظ المنتج</button><button type="button" onclick="resetAdminForm()" style="background:#444;color:#fff">إلغاء</button></div>
@@ -404,7 +409,6 @@ footer strong{color:var(--gold2);font-size:19px}
 <p>جميع الحقوق محفوظة © 2026</p>
 </footer>
 
-<a class="whatsapp" href="https://wa.me/" target="_blank">واتساب</a>
 
 <script>
 
@@ -454,7 +458,7 @@ document.getElementById("adminSaveBtn").textContent="حفظ المنتج";
 }
 function renderAdminProducts(){
 const host=document.getElementById("adminProductList");
-host.innerHTML="<p style=\"color:#aaa;font-size:12px\">عدد المنتجات: "+products.length+" / 24</p>"+products.map((p,i)=>'<div class="admin-row"><span>'+(p.name||"منتج")+(p.code?' — كود: '+p.code:'')+' — '+p.price+' جنيه</span><button type="button" onclick="editAdminProduct('+i+')">تعديل</button><button type="button" class="delete" onclick="deleteAdminProduct('+i+')">حذف</button></div>').join("")||'<p style="color:#aaa">لا توجد منتجات بعد.</p>';
+host.innerHTML="<p style=\"color:#aaa;font-size:12px\">عدد المنتجات: "+products.length+" / 240 (10 صفحات)</p>"+products.map((p,i)=>'<div class="admin-row"><span>'+(p.name||"منتج")+(p.code?' — كود: '+p.code:'')+' — '+p.price+' جنيه</span><button type="button" onclick="editAdminProduct('+i+')">تعديل</button><button type="button" class="delete" onclick="deleteAdminProduct('+i+')">حذف</button></div>').join("")||'<p style="color:#aaa">لا توجد منتجات بعد.</p>';
 }
 function editAdminProduct(i){
 const p=products[i];if(!p)return;
@@ -489,7 +493,7 @@ if(!image){alert("لا يمكن حفظ منتج من غير صورة خاصة ب
 const isFashion=["رجالي","حريمي","أطفال"].includes(cat);
 if(isFashion&&(!sizes.length||!colors.length)){alert("أدخل المقاسات والألوان المتاحة لمنتج الملابس.");return;}
 const item={name,cat,price,code,icon:"🛍️",image,images,popular:document.getElementById("adminPopular").checked,sizes:isFashion?sizes:[],colors:isFashion?colors:[]};
-if(editIndex>=0)products[editIndex]=item;else{if(products.length>=24){alert("المجلة تستوعب 24 منتجًا فقط. احذف منتجًا أولاً لإضافة غيره.");return;}products.unshift(item);}
+if(editIndex>=0)products[editIndex]=item;else{if(products.length>=240){alert("المجلة تستوعب 10 صفحات، بحد أقصى 24 منتجًا في كل صفحة (240 منتجًا). احذف منتجًا أولاً لإضافة غيره.");return;}products.unshift(item);}
 try{localStorage.setItem("fb_products",JSON.stringify(products))}catch(err){alert("مساحة التخزين المحلية غير كافية. استخدم صورة أصغر.");return}
 resetAdminForm();render();renderMagazine();renderAdminProducts();
 alert("تم حفظ المنتج في هذا المتصفح.");
@@ -531,12 +535,15 @@ const DEFAULT_PRODUCTS=[
 {name:"فستان أنيق",cat:"حريمي",price:450,icon:"👗"},
 {name:"طقم أطفال",cat:"أطفال",price:300,icon:"🧸"},
 {name:"إكسسوار مميز",cat:"إكسسوارات",price:120,icon:"💍"},
-{name:"عطر فاخر",cat:"عطور",price:350,icon:"🌹"},
 {name:"مجموعة تجميل",cat:"تجميل",price:220,icon:"💄"}
 ];;
 let products=JSON.parse(localStorage.getItem("fb_products")||"null")||DEFAULT_PRODUCTS;
 
 let selected="الكل";
+let magazinePage=1;
+const MAGAZINE_PAGE_SIZE=24;
+const MAGAZINE_MAX_PAGES=10;
+function goToMagazinePage(page){magazinePage=Math.max(1,Math.min(MAGAZINE_MAX_PAGES,Number(page)||1));render();document.getElementById("products").scrollIntoView({behavior:"smooth",block:"start"});}
 let cart=JSON.parse(localStorage.getItem("fb_cart")||"[]");
 function filter(cat,btn){
 selected=cat;
@@ -546,8 +553,8 @@ render();
 }
 function render(){
 let q=document.getElementById("search").value.trim();
-let list=products.filter(p=>(selected==="الكل"||p.cat===selected)&&(p.name.includes(q)||p.cat.includes(q)||(p.code||'').toLowerCase().includes(q.toLowerCase())));
-document.getElementById("productsList").innerHTML=list.length?list.slice(0,24).map((p)=>`
+let list=products.filter(p=>p.cat!=="عطور"&&(selected==="الكل"||p.cat===selected)&&(p.name.includes(q)||p.cat.includes(q)||(p.code||'').toLowerCase().includes(q.toLowerCase())));
+document.getElementById("productsList").innerHTML=list.length?list.slice((magazinePage-1)*MAGAZINE_PAGE_SIZE,magazinePage*MAGAZINE_PAGE_SIZE).map((p)=>`
 <div class="product">
 <div class="photo" onclick="openProduct(${products.indexOf(p)})" role="button" tabindex="0" aria-label="عرض صور المنتج">${p.image?`<img src="${p.image}" alt="${p.name}">`:p.icon}</div>
 <div class="info">
@@ -556,6 +563,10 @@ ${p.code?`<div class="product-code" style="color:#d9b66b;font-size:11px;margin:-
 <div class="price">${p.price} <small>جنيه</small></div>
 <button class="add product-cart-icon" type="button" onclick="openProduct(${products.indexOf(p)})" aria-label="افتح تفاصيل المنتج واختر المقاس واللون" title="تفاصيل المنتج والمقاسات والألوان">🛒</button>
 </div></div>`).join(""):'<div class="empty">لا توجد منتجات مطابقة للبحث</div>';
+const totalPages=Math.max(1,Math.min(MAGAZINE_MAX_PAGES,Math.ceil(list.length/MAGAZINE_PAGE_SIZE)));
+if(magazinePage>totalPages)magazinePage=totalPages;
+const pager=document.getElementById("magazinePagination");
+pager.innerHTML=totalPages>1?("<button class=\"magazine-page\" onclick=\"goToMagazinePage("+(magazinePage-1)+")\" "+(magazinePage===1?"disabled":"")+">‹</button>"+Array.from({length:totalPages},(_,i)=>i+1).map(n=>"<button class=\"magazine-page "+(n===magazinePage?"active":"")+"\" onclick=\"goToMagazinePage("+n+")\">"+n+"</button>").join("")+"<button class=\"magazine-page\" onclick=\"goToMagazinePage("+(magazinePage+1)+")\" "+(magazinePage===totalPages?"disabled":"")+">›</button><div class=\"magazine-page-info\">صفحة "+magazinePage+" من "+totalPages+" — "+list.length+" منتج</div>"):"";
 }
 function add(name,size="",color=""){
 let item=cart.find(x=>x.name===name&&x.size===size&&x.color===color);
