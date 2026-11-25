@@ -271,8 +271,8 @@ localStorage.setItem("fb_products",JSON.stringify(products));
 render();renderMagazine();renderAdminProducts();
 }
 
-function openCart(e){if(e)e.preventDefault();const box=document.getElementById("cart");box.classList.add("open");box.scrollIntoView({behavior:"smooth",block:"start"});}
-function closeCart(){document.getElementById("cart").classList.remove("open");}
+function openCart(e){if(e)e.preventDefault();const box=document.getElementById("cart");if(!box.classList.contains("open"))history.pushState({fbView:"cart"},"","#cart");box.classList.add("open");box.scrollIntoView({behavior:"smooth",block:"start"});}
+function closeCart(){if(history.state&&history.state.fbView==="cart")history.go(-1);else document.getElementById("cart").classList.remove("open");}
 function openProduct(i){
 const p=products[i];if(!p)return;
 document.getElementById("detailArt").innerHTML=p.image?'<img src="'+p.image+'" alt="'+p.name+'">':p.icon;
@@ -280,10 +280,12 @@ document.getElementById("detailName").textContent=p.name;
 document.getElementById("detailCategory").textContent=p.cat;
 document.getElementById("detailPrice").textContent=p.price+" جنيه";
 document.getElementById("detailAdd").onclick=function(){add(p.name);closeProduct();};
+if(!document.getElementById("productLightbox").classList.contains("show"))history.pushState({fbView:"product"},"","#product");
 document.getElementById("productLightbox").classList.add("show");
 document.body.style.overflow="hidden";
 }
-function closeProduct(){document.getElementById("productLightbox").classList.remove("show");document.body.style.overflow="";}
+function closeProduct(){if(history.state&&history.state.fbView==="product")history.go(-1);else{document.getElementById("productLightbox").classList.remove("show");document.body.style.overflow="";}}
+window.addEventListener("popstate",function(){document.getElementById("productLightbox").classList.remove("show");document.getElementById("cart").classList.remove("open");document.body.style.overflow="";});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeProduct()});
 
 const DEFAULT_PRODUCTS=[
