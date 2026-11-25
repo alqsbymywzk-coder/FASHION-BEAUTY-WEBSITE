@@ -626,10 +626,9 @@ ${p.code?`<div class="product-code" style="color:#d9b66b;font-size:11px;margin:-
 <div class="price">${p.price} <small>جنيه</small></div>
 <button class="add product-cart-icon" type="button" onclick="openProduct(${products.indexOf(p)})" aria-label="افتح تفاصيل المنتج واختر المقاس واللون" title="تفاصيل المنتج والمقاسات والألوان">🛒</button>
 </div></div>`).join(""):'<div class="empty">لا توجد منتجات مطابقة للبحث</div>';
-const totalPages=Math.max(1,Math.min(MAGAZINE_MAX_PAGES,Math.ceil(list.length/MAGAZINE_PAGE_SIZE)));
-if(magazinePage>totalPages)magazinePage=totalPages;
+const totalPages=MAGAZINE_MAX_PAGES;
 const pager=document.getElementById("magazinePagination");
-pager.innerHTML=totalPages>1?("<button class=\"magazine-page\" onclick=\"goToMagazinePage("+(magazinePage-1)+")\" "+(magazinePage===1?"disabled":"")+">‹</button>"+Array.from({length:totalPages},(_,i)=>i+1).map(n=>"<button class=\"magazine-page "+(n===magazinePage?"active":"")+"\" onclick=\"goToMagazinePage("+n+")\">"+n+"</button>").join("")+"<button class=\"magazine-page\" onclick=\"goToMagazinePage("+(magazinePage+1)+")\" "+(magazinePage===totalPages?"disabled":"")+">›</button><div class=\"magazine-page-info\">صفحة "+magazinePage+" من "+totalPages+" — "+list.length+" منتج</div>"):"";
+pager.innerHTML="<button class=\"magazine-page\" onclick=\"goToMagazinePage("+(magazinePage-1)+")\" "+(magazinePage===1?"disabled":"")+">‹</button>"+Array.from({length:totalPages},(_,i)=>i+1).map(n=>"<button class=\"magazine-page "+(n===magazinePage?"active":"")+"\" onclick=\"goToMagazinePage("+n+")\">"+n+"</button>").join("")+"<button class=\"magazine-page\" onclick=\"goToMagazinePage("+(magazinePage+1)+")\" "+(magazinePage===totalPages?"disabled":"")+">›</button><div class=\"magazine-page-info\">صفحة "+magazinePage+" من "+totalPages+" — "+list.length+" منتج إجماليًا</div>";
 }
 function add(name,size="",color=""){
 let item=cart.find(x=>x.name===name&&x.size===size&&x.color===color);
