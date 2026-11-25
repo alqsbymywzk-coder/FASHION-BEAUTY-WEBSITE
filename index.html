@@ -103,6 +103,21 @@ footer strong{color:#e6c36e;font-size:19px}
 @media(min-width:650px){.magazine-products{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.magazine-product-art{height:240px}.arrival-item{flex-basis:180px}.magazine-cats{grid-template-columns:repeat(7,1fr)}.magazine-intro h2{font-size:34px}.detail-art{height:330px}}
 
 @media(min-width:650px){.products{grid-template-columns:repeat(4,1fr)}.hero{min-height:340px}.photo{height:230px}}
+
+.admin-entry{display:block;text-align:center;margin:22px 0 5px;color:#9d8b68;font-size:11px;text-decoration:underline;cursor:pointer;background:none;border:0;width:100%}
+.admin-panel{display:none;margin:15px;padding:18px;background:#14120e;border:1px solid #8a6934;border-radius:9px}
+.admin-panel.open{display:block}
+.admin-panel h2{color:#e8c778;margin-bottom:8px;font-size:20px}
+.admin-note{color:#d6b976;background:#251d10;padding:10px;border-radius:5px;font-size:12px;line-height:1.8;margin:12px 0}
+.admin-panel label{display:block;color:#ddd;font-size:12px;margin:12px 0 5px}
+.admin-panel input,.admin-panel select,.admin-panel textarea{width:100%;padding:11px;background:#202020;border:1px solid #594522;border-radius:5px;color:#fff}
+.admin-panel button{cursor:pointer}
+.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.admin-actions button,.admin-row button{padding:9px 12px;border:0;border-radius:5px;background:#c49a48;color:#151109;font-weight:bold}
+.admin-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid #40331d;font-size:12px}
+.admin-row span{flex:1}
+.admin-row button.delete{background:#713b30;color:#fff}
+.admin-list{margin-top:15px}
 </style>
 </head>
 <body>
@@ -202,6 +217,12 @@ footer strong{color:#e6c36e;font-size:19px}
 <p>اكتشف تشكيلتنا المميزة واستمتع بتجربة تسوق أنيقة<br>تابعنا باستمرار لمعرفة أحدث العروض والمنتجات</p>
 </section>
 
+
+
+<section class="cartbox" id="cart">
+<h3>🛒 سلة مشترياتك</h3>
+<div id="cartItems">السلة فارغة حاليًا</div>
+<p style="margin-top:15px;color:#e6c36e">الإجمالي: <span id="total">0</span></p>
 <section class="payment" id="payment">
 <h3>💳 طرق الدفع</h3>
 <p>اختر طريقة الدفع وحوّل قيمة الطلب، ثم أرفق صورة فاتورة الإيداع لإرسالها مع الطلب للمراجعة اليدوية.</p>
@@ -223,14 +244,26 @@ footer strong{color:#e6c36e;font-size:19px}
 <p class="hint">اختر صورة الفاتورة من المعرض أو التقطها بالكاميرا. لن يتم إرسال الطلب بدون الصورة.</p>
 <p class="hint">تنبيه: سيتم مراجعة صورة الإيداع يدويًا قبل تأكيد الطلب.</p>
 </section>
-
-<section class="cartbox" id="cart">
-<h3>🛒 سلة مشترياتك</h3>
-<div id="cartItems">السلة فارغة حاليًا</div>
-<p style="margin-top:15px;color:#e6c36e">الإجمالي: <span id="total">0</span></p>
 <button class="goldbtn" onclick="order()">إتمام الطلب عبر واتساب</button>
 </section>
 
+
+<button class="admin-entry" type="button" onclick="toggleAdmin()">⚙️ إدارة المنتجات</button>
+<section class="admin-panel" id="adminPanel">
+<h2>لوحة إدارة المنتجات</h2>
+<p style="color:#aaa;font-size:12px">إضافة المنتجات وتعديل بياناتها وصورها وترتيبها.</p>
+<div class="admin-note">نسخة أولية: التغييرات تُحفظ في هذا المتصفح فقط ولا تظهر تلقائيًا للزوار من أجهزة أخرى. يلزم ربط قاعدة بيانات مشتركة وتأمين دخول المدير قبل اعتماد النشر العام.</div>
+<form id="adminForm" onsubmit="saveAdminProduct(event)">
+<input type="hidden" id="adminEditIndex" value="-1">
+<label for="adminName">اسم المنتج</label><input id="adminName" required maxlength="90" placeholder="اسم المنتج">
+<label for="adminPrice">السعر</label><input id="adminPrice" type="number" min="0" step="0.01" required placeholder="السعر">
+<label for="adminCategory">القسم</label><select id="adminCategory"><option>رجالي</option><option>حريمي</option><option>أطفال</option><option>إكسسوارات</option><option>عطور</option><option>تجميل</option></select>
+<label for="adminImage">صورة المنتج</label><input id="adminImage" type="file" accept="image/*">
+<label style="display:flex;align-items:center;gap:8px"><input id="adminPopular" type="checkbox" style="width:auto"> عرض ضمن الأكثر طلبًا</label>
+<div class="admin-actions"><button type="submit" id="adminSaveBtn">حفظ المنتج</button><button type="button" onclick="resetAdminForm()" style="background:#444;color:#fff">إلغاء</button></div>
+</form>
+<div class="admin-list"><h3 style="color:#e8c778;font-size:15px;margin:15px 0 5px">المنتجات الحالية</h3><div id="adminProductList"></div></div>
+</section>
 <footer>
 <strong>FASHION & BEAUTY</strong>
 <p>أناقتك وجمالك عنوان تميزك</p>
@@ -241,6 +274,58 @@ footer strong{color:#e6c36e;font-size:19px}
 <a class="whatsapp" href="https://wa.me/" target="_blank">واتساب</a>
 
 <script>
+
+
+function toggleAdmin(){
+const panel=document.getElementById("adminPanel");
+panel.classList.toggle("open");
+if(panel.classList.contains("open"))renderAdminProducts();
+}
+function resetAdminForm(){
+document.getElementById("adminForm").reset();
+document.getElementById("adminEditIndex").value="-1";
+document.getElementById("adminSaveBtn").textContent="حفظ المنتج";
+}
+function renderAdminProducts(){
+const host=document.getElementById("adminProductList");
+host.innerHTML=products.map((p,i)=>'<div class="admin-row"><span>'+(p.name||"منتج")+' — '+p.price+' جنيه</span><button type="button" onclick="editAdminProduct('+i+')">تعديل</button><button type="button" class="delete" onclick="deleteAdminProduct('+i+')">حذف</button></div>').join("")||'<p style="color:#aaa">لا توجد منتجات بعد.</p>';
+}
+function editAdminProduct(i){
+const p=products[i];if(!p)return;
+document.getElementById("adminEditIndex").value=String(i);
+document.getElementById("adminName").value=p.name||"";
+document.getElementById("adminPrice").value=p.price||0;
+document.getElementById("adminCategory").value=p.cat||"رجالي";
+document.getElementById("adminPopular").checked=!!p.popular;
+document.getElementById("adminSaveBtn").textContent="حفظ التعديلات";
+document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
+}
+async function saveAdminProduct(e){
+e.preventDefault();
+const name=document.getElementById("adminName").value.trim();
+const price=Number(document.getElementById("adminPrice").value);
+const cat=document.getElementById("adminCategory").value;
+const file=document.getElementById("adminImage").files[0];
+const editIndex=Number(document.getElementById("adminEditIndex").value);
+let image=editIndex>=0?(products[editIndex].image||""):"";
+if(file){
+if(!file.type.startsWith("image/")){alert("اختار صورة صحيحة للمنتج");return}
+if(file.size>1200000){alert("الصورة كبيرة. اختار صورة أقل من 1.2 ميجابايت في النسخة التجريبية.");return}
+image=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)});
+}
+if(!image){alert("لا يمكن حفظ منتج من غير صورة خاصة به.");return}
+const item={name,cat,price,icon:"🛍️",image,popular:document.getElementById("adminPopular").checked};
+if(editIndex>=0)products[editIndex]=item;else products.push(item);
+try{localStorage.setItem("fb_products",JSON.stringify(products))}catch(err){alert("مساحة التخزين المحلية غير كافية. استخدم صورة أصغر.");return}
+resetAdminForm();render();renderMagazine();renderAdminProducts();
+alert("تم حفظ المنتج في هذا المتصفح.");
+}
+function deleteAdminProduct(i){
+if(!confirm("متأكد إنك عايز تحذف المنتج؟"))return;
+products.splice(i,1);
+localStorage.setItem("fb_products",JSON.stringify(products));
+render();renderMagazine();renderAdminProducts();
+}
 
 function productCard(p,idx,badge){
 const art=p.image?'<img src="'+p.image+'" alt="'+p.name+'">':p.icon;
@@ -273,14 +358,16 @@ document.body.style.overflow="hidden";
 function closeProduct(){document.getElementById("productLightbox").classList.remove("show");document.body.style.overflow="";}
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeProduct()});
 
-const products=[
+const DEFAULT_PRODUCTS=[
 {name:"قميص أنيق",cat:"رجالي",price:250,icon:"👔"},
 {name:"فستان أنيق",cat:"حريمي",price:450,icon:"👗"},
 {name:"طقم أطفال",cat:"أطفال",price:300,icon:"🧸"},
 {name:"إكسسوار مميز",cat:"إكسسوارات",price:120,icon:"💍"},
 {name:"عطر فاخر",cat:"عطور",price:350,icon:"🌹"},
 {name:"مجموعة تجميل",cat:"تجميل",price:220,icon:"💄"}
-];
+];;
+let products=JSON.parse(localStorage.getItem("fb_products")||"null")||DEFAULT_PRODUCTS;
+
 let selected="الكل";
 let cart=JSON.parse(localStorage.getItem("fb_cart")||"[]");
 function filter(cat,btn){
