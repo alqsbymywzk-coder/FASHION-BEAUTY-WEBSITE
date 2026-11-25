@@ -327,6 +327,12 @@ footer strong{color:var(--gold2);font-size:19px}
   #products .product:after{inset:7px}
 }
 
+
+/* ALWAYS VISIBLE GOLD MAGAZINE PAGINATION */
+#magazinePagination.magazine-pagination{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;z-index:5!important;min-height:48px!important;width:100%!important;padding:12px 4px!important;margin:22px auto 18px!important;clear:both!important;}
+#magazinePagination .magazine-page{display:inline-flex!important;visibility:visible!important;opacity:1!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;min-width:38px!important;min-height:38px!important;color:#f5dfa0!important;background:linear-gradient(145deg,#211a10,#100e0b)!important;border:1px solid #d9b66b!important;}
+#magazinePagination .magazine-page.active{color:#171109!important;background:linear-gradient(145deg,#fff0b8,#b98532)!important;}
+#magazinePagination .magazine-page-info{display:block!important;flex:0 0 100%!important;}
 </style>
 </head>
 <body>
@@ -395,7 +401,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <section class="section" id="products">
   <div class="products-heading"><h2 class="heading">منتجاتنا</h2><button class="cart-shortcut" type="button" onclick="openCart(event)">🛒 السلة <span id="count">0</span></button></div>
   <div class="products" id="productsList"></div>
-  <nav class="magazine-pagination" id="magazinePagination" aria-label="صفحات المجلة"></nav>
+  <nav class="magazine-pagination" id="magazinePagination" aria-label="صفحات المجلة"><button class="magazine-page" type="button" onclick="goToMagazinePage(1)" disabled>‹</button><button class="magazine-page active" type="button" onclick="goToMagazinePage(1)">1</button><button class="magazine-page " type="button" onclick="goToMagazinePage(2)">2</button><button class="magazine-page " type="button" onclick="goToMagazinePage(3)">3</button><button class="magazine-page " type="button" onclick="goToMagazinePage(4)">4</button><button class="magazine-page " type="button" onclick="goToMagazinePage(5)">5</button><button class="magazine-page " type="button" onclick="goToMagazinePage(6)">6</button><button class="magazine-page " type="button" onclick="goToMagazinePage(7)">7</button><button class="magazine-page " type="button" onclick="goToMagazinePage(8)">8</button><button class="magazine-page " type="button" onclick="goToMagazinePage(9)">9</button><button class="magazine-page " type="button" onclick="goToMagazinePage(10)">10</button><button class="magazine-page" type="button" onclick="goToMagazinePage(2)">›</button><div class="magazine-page-info">صفحة 1 من 10</div></nav>
 </section>
 <div class="product-lightbox" id="productLightbox" onclick="if(event.target===this)closeProduct()">
  <div class="product-detail" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
