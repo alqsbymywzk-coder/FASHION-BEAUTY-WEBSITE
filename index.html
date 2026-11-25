@@ -53,6 +53,36 @@ footer{margin-top:30px;background:#111;border-top:1px solid #554323;text-align:c
 footer strong{color:#e6c36e;font-size:19px}
 .whatsapp{position:fixed;bottom:18px;left:15px;background:#188b50;color:white;padding:13px 17px;border-radius:30px;font-weight:bold;box-shadow:0 3px 12px #000}
 .payment{margin:15px;background:#151515;border:1px solid #735a2b;padding:18px;border-radius:5px}.payment h3{color:#e6c36e;margin-bottom:12px}.payment p{color:#ccc;font-size:13px;line-height:2;margin:8px 0}.payment-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}.payment code{direction:ltr;unicode-bidi:embed;color:#f1d78a;font-size:14px}.payment a{color:#f1d78a;text-decoration:underline}.payment input,.payment select{width:100%;padding:12px;background:#202020;border:1px solid #554323;color:white;border-radius:4px;margin:7px 0 12px}.payment label{display:block;color:#ddd;font-size:13px;margin-top:10px}.payment .hint{color:#aaa;font-size:12px}
+
+/* FASHION & BEAUTY MAGAZINE */
+.magazine{padding:24px 15px;background:linear-gradient(180deg,#100e0a,#090909)}
+.magazine-top{text-align:center;padding:25px 15px;margin-bottom:20px;border:1px solid #80632d;background:radial-gradient(ellipse at center,#3b2d16,#111 70%)}
+.magazine-kicker{color:#d6ad55;font-size:12px;letter-spacing:2px;margin-bottom:10px}
+.magazine-top h2{font-family:Georgia,serif;color:#f0d58e;font-size:27px;margin-bottom:10px}
+.magazine-top p{color:#ccc;font-size:13px;line-height:2}
+.magazine-cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}
+.magazine-cat{background:linear-gradient(145deg,#211b10,#111);border:1px solid #594522;color:#e9cb80;padding:15px 5px;border-radius:7px;font-size:12px;cursor:pointer;min-height:76px}
+.magazine-cat span{display:block;font-size:24px;margin-bottom:7px}
+.magazine-cat.active{background:linear-gradient(135deg,#b58a3e,#f0d58e);color:#171109;border-color:#f0d58e}
+.magazine-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 12px}
+.magazine-toolbar h3{color:#e6c36e;font-size:19px}
+.magazine-toolbar small{color:#888}
+.magazine-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.magazine-card{background:#15130f;border:1px solid #382d1a;border-radius:7px;overflow:hidden}
+.magazine-cover{height:125px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#3c2e18,#17130d);font-size:43px}
+.magazine-cover img{width:100%;height:100%;object-fit:cover}
+.magazine-copy{padding:12px}
+.magazine-tag{font-size:10px;color:#d6ad55;margin-bottom:7px}
+.magazine-copy h4{font-size:14px;line-height:1.7;margin-bottom:7px;color:#f4e8ca}
+.magazine-copy p{font-size:11px;line-height:1.8;color:#999}
+.magazine-read{background:none;border:0;color:#e6c36e;padding:10px 0 0;font-weight:bold;cursor:pointer}
+.magazine-empty{grid-column:1/-1;text-align:center;color:#aaa;padding:25px}
+.article-view{display:none;background:#14120e;border:1px solid #71582b;padding:18px;margin-top:16px;border-radius:7px}
+.article-view h3{color:#e6c36e;margin:10px 0}
+.article-view p{color:#ddd;line-height:2;font-size:14px}
+.article-back{background:#bd984b;color:#111;border:0;padding:9px 15px;border-radius:4px;font-weight:bold;margin-bottom:12px}
+@media(min-width:650px){.magazine-grid{grid-template-columns:repeat(3,1fr)}.magazine-cover{height:190px}.magazine-cats{grid-template-columns:repeat(6,1fr)}.magazine-top h2{font-size:36px}}
+
 @media(min-width:650px){.products{grid-template-columns:repeat(4,1fr)}.hero{min-height:340px}.photo{height:230px}}
 </style>
 </head>
@@ -67,6 +97,7 @@ footer strong{color:#e6c36e;font-size:19px}
 <nav>
 <a href="#home">الرئيسية</a>
 <a href="#categories">الأقسام</a>
+<a href="#magazine">المجلة</a>
 <a href="#products">المنتجات</a>
 <a href="#offers">العروض</a>
 <a href="#cart">سلة التسوق 🛒 <span id="count">0</span></a>
@@ -78,6 +109,33 @@ footer strong{color:#e6c36e;font-size:19px}
 <p>اكتشف عالم الأناقة والجمال<br>اختيارات مميزة لك ولأسرتك<br>الجودة والأناقة في مكان واحد</p>
 <a href="#products" class="goldbtn">تسوق الآن</a>
 </div>
+</section>
+
+
+<section class="magazine" id="magazine">
+  <div class="magazine-top">
+    <div class="magazine-kicker">THE WORLD OF STYLE & BEAUTY</div>
+    <h2>مجلة FASHION & BEAUTY</h2>
+    <p>مساحتك لاكتشاف الأناقة والجمال وأحدث الإلهامات<br>اختاري قسمك واكتشفي حكاياته</p>
+  </div>
+  <h2 class="heading">تصفحي المجلة حسب القسم</h2>
+  <p class="desc">كل قسم له عالمه ومحتواه الخاص</p>
+  <div class="magazine-cats" id="magazineCats">
+    <button class="magazine-cat active" onclick="showMagazine('الكل',this)"><span>✦</span>كل المجلة</button>
+    <button class="magazine-cat" onclick="showMagazine('أزياء رجالي',this)"><span>🤵</span>أزياء رجالي</button>
+    <button class="magazine-cat" onclick="showMagazine('أزياء حريمي',this)"><span>👗</span>أزياء حريمي</button>
+    <button class="magazine-cat" onclick="showMagazine('أزياء أطفال',this)"><span>🧸</span>أزياء أطفال</button>
+    <button class="magazine-cat" onclick="showMagazine('إكسسوارات',this)"><span>💎</span>إكسسوارات</button>
+    <button class="magazine-cat" onclick="showMagazine('الجمال والعناية',this)"><span>💄</span>الجمال والعناية</button>
+  </div>
+  <div class="magazine-toolbar"><h3 id="magazineTitle">أحدث موضوعات المجلة</h3><small id="magazineCount">6 موضوعات</small></div>
+  <div class="magazine-grid" id="magazineList"></div>
+  <article class="article-view" id="articleView">
+    <button class="article-back" onclick="closeArticle()">← العودة للمجلة</button>
+    <div class="magazine-tag" id="articleTag"></div>
+    <h3 id="articleTitle"></h3>
+    <p id="articleBody"></p>
+  </article>
 </section>
 
 <section class="section" id="categories">
@@ -153,6 +211,39 @@ footer strong{color:#e6c36e;font-size:19px}
 <a class="whatsapp" href="https://wa.me/" target="_blank">واتساب</a>
 
 <script>
+
+const magazineArticles=[
+{cat:"أزياء رجالي",icon:"🤵",title:"أناقة الرجل تبدأ من التفاصيل",summary:"دليل مبسط لاختيار إطلالة رجالية متناسقة لكل يوم.",body:"الأناقة ليست في كثرة القطع، بل في حسن اختيارها وتناسق الألوان والمقاسات. ابدأ بقطع أساسية مريحة، واهتم بنظافة الحذاء وتناسق الحزام والساعة مع الإطلالة. هذه مساحة تحريرية تجريبية، ويمكن لاحقًا إضافة مقالاتك وصورك من لوحة الإدارة."},
+{cat:"أزياء حريمي",icon:"👗",title:"اختاري إطلالتك بثقة",summary:"أفكار لتنسيق الملابس والألوان بما يعبر عن ذوقك.",body:"اختيار الإطلالة المناسبة يبدأ بمعرفة ما يريحك ويعبر عن شخصيتك. جرّبي تنسيق لون أساسي مع لون مكمل، واختاري خامات مناسبة للموسم والمناسبة. يمكن أن يتحول هذا الموضوع لاحقًا إلى مقال كامل بصور وتفاصيل من إعداد إدارة المجلة."},
+{cat:"أزياء أطفال",icon:"🧸",title:"راحة وأناقة للصغار",summary:"كيف تجمعين بين الملابس المريحة والمظهر الجميل للأطفال.",body:"ملابس الأطفال الأفضل هي التي تسمح بالحركة وتناسب الجو وسهلة العناية. اختاري خامات لطيفة على البشرة ومقاسات مريحة، واجعلي الألوان والرسومات مساحة للمرح."},
+{cat:"إكسسوارات",icon:"💎",title:"لمسات صغيرة تصنع فرقًا",summary:"الإكسسوارات المناسبة تضيف شخصية وأناقة إلى أي إطلالة.",body:"يمكن لقطعة إكسسوار واحدة أن تكمل الإطلالة دون مبالغة. وازني بين حجم القطعة وبساطة الملابس، واختاري ما يناسب ألوانك والمناسبة."},
+{cat:"الجمال والعناية",icon:"💄",title:"روتين جمال بسيط كل يوم",summary:"خطوات عامة للعناية بالمظهر وإطلالة مرتبة.",body:"الاهتمام اليومي البسيط يصنع فارقًا: تنظيف لطيف، ترطيب مناسب، واختيار مستحضرات تناسب احتياجاتك. احرصي على قراءة تعليمات المنتجات واختبار أي منتج جديد بحذر."},
+{cat:"الجمال والعناية",icon:"🌸",title:"ألوان وإلهام لموسم جديد",summary:"مساحة للأفكار والاتجاهات الجمالية التي تلهمك.",body:"الإلهام يبدأ بتجربة ما يناسب ذوقك، وليس اتباع كل صيحة. اختاري الألوان التي تحبينها ونسقيها بطريقتك الخاصة."}
+];
+function showMagazine(cat,btn){
+document.querySelectorAll(".magazine-cat").forEach(b=>b.classList.remove("active"));
+if(btn)btn.classList.add("active");
+const list=cat==="الكل"?magazineArticles:magazineArticles.filter(a=>a.cat===cat);
+document.getElementById("magazineTitle").textContent=cat==="الكل"?"أحدث موضوعات المجلة":cat;
+document.getElementById("magazineCount").textContent=list.length+" موضوعات";
+document.getElementById("articleView").style.display="none";
+document.getElementById("magazineList").style.display="grid";
+document.getElementById("magazineList").innerHTML=list.length?list.map((a,i)=>'<div class="magazine-card"><div class="magazine-cover">'+a.icon+'</div><div class="magazine-copy"><div class="magazine-tag">'+a.cat+'</div><h4>'+a.title+'</h4><p>'+a.summary+'</p><button class="magazine-read" onclick="openArticle('+magazineArticles.indexOf(a)+')">اقرأ الموضوع ←</button></div></div>').join(""):'<div class="magazine-empty">سيتم إضافة موضوعات هذا القسم قريبًا</div>';
+}
+function openArticle(i){
+const a=magazineArticles[i];if(!a)return;
+document.getElementById("articleTag").textContent=a.cat;
+document.getElementById("articleTitle").textContent=a.title;
+document.getElementById("articleBody").textContent=a.body;
+document.getElementById("magazineList").style.display="none";
+document.getElementById("articleView").style.display="block";
+document.getElementById("articleView").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function closeArticle(){
+document.getElementById("articleView").style.display="none";
+document.getElementById("magazineList").style.display="grid";
+}
+
 const products=[
 {name:"قميص أنيق",cat:"رجالي",price:250,icon:"👔"},
 {name:"فستان أنيق",cat:"حريمي",price:450,icon:"👗"},
@@ -227,7 +318,7 @@ if(navigator.share && navigator.canShare && navigator.canShare({files:[receipt]}
  window.open("https://wa.me/201221718109?text="+encodeURIComponent(msg),"_blank");
 }
 }
-render();save();
+render();save();showMagazine("الكل",document.querySelector(".magazine-cat"));
 </script>
 </body>
 </html>
