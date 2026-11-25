@@ -583,6 +583,18 @@ document.getElementById("adminPopular").checked=!!p.popular;
 document.getElementById("adminSaveBtn").textContent="حفظ التعديلات";
 document.getElementById("adminPanel").scrollIntoView({behavior:"smooth"});
 }
+async function compressProductImage(file){
+  const bitmap=await createImageBitmap(file);
+  const maxWidth=1000,maxHeight=1250,scale=Math.min(1,maxWidth/bitmap.width,maxHeight/bitmap.height);
+  const canvas=document.createElement("canvas");
+  canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+  canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  const ctx=canvas.getContext("2d");
+  ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
+  if(bitmap.close)bitmap.close();
+  return canvas.toDataURL("image/jpeg",0.68);
+}
 async function saveAdminProduct(e){
 e.preventDefault();
 const name=document.getElementById("adminName").value.trim();
@@ -596,15 +608,21 @@ const editIndex=Number(document.getElementById("adminEditIndex").value);
 let oldProduct=editIndex>=0?products[editIndex]:null;
 let images=oldProduct?(oldProduct.images&&oldProduct.images.length?oldProduct.images:[oldProduct.image||""]).filter(Boolean):[];
 if(files.length>6){alert("يمكن إضافة 6 صور كحد أقصى للمنتج.");return;}
-for(const file of files){if(!file.type.startsWith("image/")){alert("اختار صور صحيحة للمنتج");return}if(file.size>1200000){alert("إحدى الصور أكبر من 1.2 ميجابايت. اختار صورًا أصغر.");return}}
-if(files.length){const added=await Promise.all(files.map(file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)})));images=[...images,...added].slice(0,6);}
+for(const file of files){if(!file.type.startsWith("image/")){alert("اختار صور صحيحة للمنتج");return}if(file.size>12000000){alert("حجم الصورة كبير جدًا (أكثر من 12 ميجابايت). اختار صورة أصغر.");return}}
+if(files.length){
+  try{
+    const added=await Promise.all(files.map(compressProductImage));
+    images=[...images,...added].slice(0,6);
+  }catch(err){alert("تعذر تجهيز الصورة. جرّب صورة بصيغة JPG أو PNG.");return}
+}
 let image=images[0]||"";
 if(!image){alert("لا يمكن حفظ منتج من غير صورة خاصة به.");return}
 const isFashion=["رجالي","حريمي","أطفال"].includes(cat);
 if(isFashion&&(!sizes.length||!colors.length)){alert("أدخل المقاسات والألوان المتاحة لمنتج الملابس.");return;}
 const item={name,cat,price,code,icon:"🛍️",image,images,popular:document.getElementById("adminPopular").checked,sizes:isFashion?sizes:[],colors:isFashion?colors:[]};
+const previousProducts=products.slice();
 if(editIndex>=0)products[editIndex]=item;else{if(products.length>=240){alert("المجلة تستوعب 10 صفحات، بحد أقصى 24 منتجًا في كل صفحة (240 منتجًا). احذف منتجًا أولاً لإضافة غيره.");return;}products.unshift(item);}
-try{localStorage.setItem("fb_products",JSON.stringify(products))}catch(err){alert("مساحة التخزين المحلية غير كافية. استخدم صورة أصغر.");return}
+try{localStorage.setItem("fb_products",JSON.stringify(products))}catch(err){products=previousProducts;alert("مساحة المتصفح ممتلئة حتى بعد ضغط الصورة. احذف صورًا أو منتجات قديمة من هذا المتصفح ثم حاول مرة أخرى.");return}
 resetAdminForm();render();renderMagazine();renderAdminProducts();
 alert("تم حفظ المنتج في هذا المتصفح.");
 }
