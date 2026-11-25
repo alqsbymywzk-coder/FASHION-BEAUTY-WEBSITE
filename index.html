@@ -127,9 +127,12 @@ footer strong{color:#e6c36e;font-size:19px}
 </select>
 <label for="receiptImage">صورة فاتورة الإيداع</label>
 <input id="receiptImage" type="file" accept="image/*" required style="display:none" onchange="showReceiptName()">
-<button type="button" class="goldbtn" style="width:100%;margin-top:8px" onclick="document.getElementById(\'receiptImage\').click()">📷 اختيار صورة فاتورة الإيداع</button>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+<button type="button" class="goldbtn" style="flex:1;min-width:145px" onclick="chooseReceipt('gallery')">🖼️ اختيار من المعرض</button>
+<button type="button" class="goldbtn" style="flex:1;min-width:145px" onclick="chooseReceipt('camera')">📷 التقاط بالكاميرا</button>
+</div>
 <p id="receiptName" class="hint">لم يتم اختيار صورة بعد</p>
-<p class="hint">ارفع صورة واضحة لفاتورة الإيداع من الكاميرا أو معرض الصور. لن يتم إرسال الطلب بدون الصورة.</p>
+<p class="hint">اختر صورة الفاتورة من المعرض أو التقطها بالكاميرا. لن يتم إرسال الطلب بدون الصورة.</p>
 <p class="hint">تنبيه: سيتم مراجعة صورة الإيداع يدويًا قبل تأكيد الطلب.</p>
 </section>
 
@@ -192,6 +195,12 @@ document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
 document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
 }
 function removeItem(i){cart.splice(i,1);save()}
+function chooseReceipt(source){
+const input=document.getElementById("receiptImage");
+if(source==="camera"){input.setAttribute("capture","environment");}
+else{input.removeAttribute("capture");}
+input.click();
+}
 function showReceiptName(){
 const file=document.getElementById("receiptImage").files[0];
 document.getElementById("receiptName").textContent=file?"تم اختيار الصورة: "+file.name:"لم يتم اختيار صورة بعد";
