@@ -169,6 +169,32 @@ footer strong{color:#e6c36e;font-size:19px}
 @media(min-width:650px){
  .magazine-products{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 }
+ 
+/* CLEAN SINGLE-PAGE STORE LAYOUT */
+#home,.hero{display:block!important}
+#categories{display:block!important}
+.magazine-intro,.magazine-block{display:none!important}
+.hero{min-height:290px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important}
+.hero>div{width:100%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.hero h1{display:none!important}
+.animated-brand{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;width:min(92%,520px);min-height:132px;padding:20px 12px;border:1px solid #a78342;border-radius:24px;background:radial-gradient(ellipse at center,#332614 0%,#17120a 55%,#090909 100%);box-shadow:0 0 12px #c89b4d55,inset 0 0 22px #d8ad5b22;overflow:hidden}
+.animated-brand:before{content:"";position:absolute;inset:-55%;background:conic-gradient(from 0deg,transparent 0 72%,#ffe7a8 78%,#d5a34e 82%,transparent 88% 100%);animation:brandOrbit 4s linear infinite;opacity:.9}
+.animated-brand:after{content:"";position:absolute;inset:3px;border:1px solid #d8b66b66;border-radius:20px;pointer-events:none}
+.animated-brand span,.animated-brand small{position:relative;z-index:1;text-shadow:0 0 9px #e4bd6b99}
+.animated-brand span{font-family:Georgia,serif;font-size:clamp(22px,5.6vw,36px);font-weight:900;letter-spacing:1.5px;color:#f2d28b}
+.animated-brand small{font-size:10px;letter-spacing:3px;color:#d9bd80}
+@keyframes brandOrbit{to{transform:rotate(360deg)}}
+.shop-tools{max-width:1240px;margin:0 auto;padding:16px 14px 4px}
+.icon-categories{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;align-items:center}
+.icon-category{aspect-ratio:1/1;min-width:0;border:1px solid #75582b;border-radius:15px;background:linear-gradient(145deg,#292014,#100e0b);color:#f2d28b;font-size:clamp(20px,6vw,29px);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px #0008;transition:transform .2s,border-color .2s,box-shadow .2s}
+.icon-category.active{border-color:#f0cf7b;box-shadow:0 0 13px #d6a94e66,inset 0 0 10px #d6a94e22;transform:translateY(-2px)}
+.search-wrap{position:relative;margin:16px 0 7px}
+.search-wrap>span{position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:25px;color:#d8b66b;pointer-events:none}
+.search-wrap .search{width:100%;margin:0;padding:14px 48px 14px 14px;border:1px solid #806331;border-radius:14px;background:#15120d;color:#fff;font-size:15px;box-sizing:border-box}
+#products{max-width:1240px;margin:0 auto;padding:12px 14px 30px}
+#products .heading{margin:10px 0 18px;text-align:right}
+#products .products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:650px){#products .products{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}}
 </style>
 </head>
 <body>
@@ -190,40 +216,31 @@ footer strong{color:#e6c36e;font-size:19px}
 
 <section class="hero" id="home">
 <div>
-<h1>FASHION & BEAUTY</h1>
+<div class="animated-brand" role="img" aria-label="FASHION AND BEAUTY logo with moving golden light"><span>FASHION &amp; BEAUTY</span><small>STYLE • ELEGANCE • BEAUTY</small></div>
 <p>اكتشف عالم الأناقة والجمال<br>اختيارات مميزة لك ولأسرتك<br>الجودة والأناقة في مكان واحد</p>
 <a href="#products" class="goldbtn">تسوق الآن</a>
 </div>
 </section>
 
 
-<section class="magazine" id="magazine">
-  <div class="magazine-intro">
-    <span>FASHION & BEAUTY • NEW COLLECTION</span>
-    <h2>اكتشفي اختياراتك المفضلة</h2>
-    <p>كل جديد في عالم الأناقة والجمال… في مكان واحد</p>
+<section class="shop-tools" id="categories">
+  <div class="icon-categories" aria-label="أقسام المتجر">
+    <button class="icon-category active" type="button" onclick="filter('الكل',this)" aria-label="كل المنتجات" title="كل المنتجات">✦</button>
+    <button class="icon-category" type="button" onclick="filter('رجالي',this)" aria-label="رجالي" title="رجالي">👔</button>
+    <button class="icon-category" type="button" onclick="filter('حريمي',this)" aria-label="حريمي" title="حريمي">👗</button>
+    <button class="icon-category" type="button" onclick="filter('أطفال',this)" aria-label="أطفال" title="أطفال">🧸</button>
+    <button class="icon-category" type="button" onclick="filter('إكسسوارات',this)" aria-label="إكسسوارات" title="إكسسوارات">💎</button>
+    <button class="icon-category" type="button" onclick="filter('عطور',this)" aria-label="عطور" title="عطور">🌹</button>
+    <button class="icon-category" type="button" onclick="filter('تجميل',this)" aria-label="تجميل" title="تجميل">💄</button>
   </div>
-  <div class="magazine-block">
-    <div class="magazine-strip-head"><h3>أضيف حديثًا</h3><span>تصفحي أحدث تشكيلتنا</span></div>
-    <div class="magazine-products" id="magazineLatest"></div>
+  <div class="search-wrap">
+    <span>⌕</span>
+    <input class="search" id="search" type="search" placeholder="ابحث عن منتج في المتجر..." oninput="render()" aria-label="ابحث عن منتج">
   </div>
-  <div class="magazine-block">
-    <div class="magazine-strip-head"><h3>الأكثر طلبًا</h3><span>اختيارات مميزة من المتجر</span></div>
-    <div class="magazine-products" id="magazinePopular"></div>
-  </div>
-  <div class="magazine-block">
-    <div class="magazine-strip-head"><h3>تسوقي حسب القسم</h3><span>اختاري القسم لعرض منتجاته</span></div>
-    <div class="magazine-cats" id="magazineCats">
-      <button class="magazine-cat active" onclick="showMagazine('الكل',this)"><span>✦</span>كل المنتجات</button>
-      <button class="magazine-cat" onclick="showMagazine('رجالي',this)"><span>🤵</span>رجالي</button>
-      <button class="magazine-cat" onclick="showMagazine('حريمي',this)"><span>👗</span>حريمي</button>
-      <button class="magazine-cat" onclick="showMagazine('أطفال',this)"><span>🧸</span>أطفال</button>
-      <button class="magazine-cat" onclick="showMagazine('إكسسوارات',this)"><span>💎</span>إكسسوارات</button>
-      <button class="magazine-cat" onclick="showMagazine('عطور',this)"><span>🌹</span>عطور</button>
-      <button class="magazine-cat" onclick="showMagazine('تجميل',this)"><span>💄</span>تجميل</button>
-    </div>
-    <div class="magazine-products" id="magazineCategoryProducts"></div>
-  </div>
+</section>
+<section class="section" id="products">
+  <h2 class="heading">منتجاتنا</h2>
+  <div class="products" id="productsList"></div>
 </section>
 <div class="product-lightbox" id="productLightbox" onclick="if(event.target===this)closeProduct()">
  <div class="product-detail" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
@@ -376,28 +393,6 @@ localStorage.setItem("fb_products",JSON.stringify(products));
 render();renderMagazine();renderAdminProducts();
 }
 
-function productCard(p,idx,badge){
-const art=p.image?'<img src="'+p.image+'" alt="'+p.name+'">':p.icon;
-return '<div class="magazine-product" onclick="openProduct('+idx+')"><div class="magazine-product-inner"><div class="magazine-product-art">'+(badge?'<span class="product-ribbon">'+badge+'</span>':'')+art+'</div><div class="magazine-product-copy"><h4>'+p.name+'</h4><div class="magazine-product-price">'+p.price+' جنيه</div><span class="magazine-product-hint">اضغطي لمشاهدة التفاصيل ✦</span></div></div></div>';
-}
-function showMagazine(cat,btn){
-document.querySelectorAll(".magazine-cat").forEach(b=>b.classList.remove("active"));
-if(btn)btn.classList.add("active");
-const list=cat==="الكل"?products:products.filter(p=>p.cat===cat);
-document.getElementById("magazineCategoryProducts").innerHTML=list.length?list.map(p=>productCard(p,products.indexOf(p))).join(""):'<div class="empty">لا توجد منتجات في هذا القسم حاليًا</div>';
-}
-function renderMagazine(){
-const newest=products.slice().reverse();
-const latestHost=document.getElementById("magazineLatest");
-latestHost.classList.remove("auto-strip");
-latestHost.innerHTML=newest.length?newest.map(p=>productCard(p,products.indexOf(p),"جديد")).join(""):'<div class="empty">لا توجد منتجات للعرض حاليًا</div>';
-const selectedPopular=products.filter(p=>p.popular);
-const popular=selectedPopular.length?selectedPopular:newest.slice(0,4);
-const popularHost=document.getElementById("magazinePopular");
-popularHost.classList.remove("auto-strip");
-popularHost.innerHTML=popular.length?popular.map(p=>productCard(p,products.indexOf(p),"الأكثر طلبًا")).join(""):'<div class="empty">اختاري المنتجات الأكثر طلبًا من لوحة الإدارة لعرضها هنا.</div>';
-showMagazine("الكل",document.querySelector(".magazine-cat"));
-}
 function openCart(e){if(e)e.preventDefault();const box=document.getElementById("cart");box.classList.add("open");box.scrollIntoView({behavior:"smooth",block:"start"});}
 function closeCart(){document.getElementById("cart").classList.remove("open");}
 function openProduct(i){
@@ -427,10 +422,9 @@ let selected="الكل";
 let cart=JSON.parse(localStorage.getItem("fb_cart")||"[]");
 function filter(cat,btn){
 selected=cat;
-document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+document.querySelectorAll(".icon-category").forEach(b=>b.classList.remove("active"));
 if(btn)btn.classList.add("active");
 render();
-document.getElementById("products").scrollIntoView({behavior:"smooth"});
 }
 function render(){
 let q=document.getElementById("search").value.trim();
@@ -489,7 +483,7 @@ if(navigator.share && navigator.canShare && navigator.canShare({files:[receipt]}
  window.open("https://wa.me/201221718109?text="+encodeURIComponent(msg),"_blank");
 }
 }
-render();save();renderMagazine();
+render();save();
 </script>
 </body>
 </html>
