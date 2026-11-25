@@ -101,6 +101,58 @@ footer strong{color:var(--gold2);font-size:19px}
 @media(max-width:390px){.info h3{font-size:12px;min-height:42px;max-height:42px}}
 @media(min-width:650px){#products .products{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px}.photo{width:160px;height:215px}.hero{width:min(1180px,calc(100% - 48px))}.shop-tools,#products{width:min(1180px,calc(100% - 48px))}.brand-frame{min-height:210px}}
 @media(max-width:390px){.icon-categories{gap:5px}.icon-category{border-radius:9px}.brand-frame{aspect-ratio:2.7/1;min-height:125px}.info{padding:9px}.info h3{font-size:12px}}
+
+/* FASHION & BEAUTY — luxury black & gold cover */
+.brand-frame{
+  aspect-ratio:3.15/1;
+  min-height:160px;
+  max-height:350px;
+  padding:12px;
+  border-radius:15px;
+  background:
+    radial-gradient(ellipse at 50% 48%,#49351a55 0%,transparent 43%),
+    radial-gradient(ellipse at 8% 10%,#d9b66b18 0%,transparent 30%),
+    radial-gradient(ellipse at 92% 90%,#d9b66b18 0%,transparent 30%),
+    repeating-linear-gradient(135deg,#ffffff04 0 1px,transparent 1px 9px),
+    #080807;
+  box-shadow:0 14px 38px #000, inset 0 0 35px #d9b66b12, 0 0 0 1px #d9b66b44;
+}
+.brand-frame:before{
+  inset:0;
+  padding:2px;
+  border-radius:15px;
+  background:linear-gradient(135deg,#fff0bd,#9b702f 22%,#f8dfa0 48%,#8c6429 72%,#fff0bd);
+  animation:none;
+  opacity:1;
+  box-shadow:0 0 15px #d9b66b33;
+}
+.brand-frame:after{
+  inset:5px;
+  border-radius:11px;
+  background:
+    radial-gradient(ellipse at center,#2b2010 0%,#100e0a 48%,#080807 100%);
+  box-shadow:inset 0 0 0 1px #d9b66b66,inset 0 0 28px #d9b66b12;
+}
+.brand-logo-image{
+  max-height:310px;
+  filter:drop-shadow(0 0 9px #e5bf6b66);
+  animation:logoGlimmer 5s ease-in-out infinite;
+}
+.brand-frame .logo-shine{opacity:.55;animation-duration:8s}
+@keyframes logoGlimmer{
+  0%,100%{filter:drop-shadow(0 0 6px #e5bf6b44)}
+  50%{filter:drop-shadow(0 0 13px #f8dfa077)}
+}
+@media(max-width:520px){
+  .hero{margin:14px auto 12px!important}
+  .brand-frame{aspect-ratio:2.45/1;min-height:132px;padding:8px}
+  .brand-frame:after{inset:4px}
+  .brand-logo-image{max-height:220px}
+}
+@media(prefers-reduced-motion:reduce){
+  .brand-logo-image,.brand-frame .logo-shine{animation:none!important}
+}
+
 </style>
 </head>
 <body>
