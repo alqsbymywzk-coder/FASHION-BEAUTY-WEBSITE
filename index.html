@@ -172,8 +172,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <section class="payment" id="payment">
 <h3>💳 طرق الدفع</h3>
 <p>اختر طريقة الدفع وحوّل قيمة الطلب، ثم أرفق صورة فاتورة الإيداع لإرسالها مع الطلب للمراجعة اليدوية.</p>
-<div class="payment-row"><strong>فودافون كاش:</strong> <code>01221718109</code></div>
-<p><strong>إنستا باي:</strong> <a href="https://ipn.eg/S/elkasaby90/instapay/4sJAKB" target="_blank" rel="noopener">افتح رابط الدفع عبر إنستا باي</a></p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0"><button type="button" class="goldbtn" onclick="copyVodafoneNumber()" style="min-height:90px">🔴<br><strong>فودافون كاش</strong><br><small>اضغط لنسخ رقم التحويل</small></button><a class="goldbtn" href="https://ipn.eg/S/elkasaby90/instapay/4sJAKB" target="_blank" rel="noopener" style="min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">🟣<br><strong>إنستا باي</strong><br><small>اضغط لفتح الدفع</small></a></div><p id="paymentStatus" style="text-align:center;color:#f5dfa0;font-size:12px">رقم فودافون كاش: 01221718109</p>
 <label for="paymentMethod">طريقة الدفع</label>
 <select id="paymentMethod">
 <option value="">اختر طريقة الدفع</option>
@@ -380,6 +379,7 @@ document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
 document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
 }
 function removeItem(i){cart.splice(i,1);save()}
+function copyVodafoneNumber(){const n="01221718109";const t=document.createElement("textarea");t.value=n;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();document.getElementById("paymentStatus").textContent="تم نسخ رقم فودافون كاش: "+n+" — أكمل التحويل من فودافون كاش.";document.getElementById("paymentMethod").value="فودافون كاش";}
 function chooseReceipt(source){
 const input=document.getElementById("receiptImage");
 if(source==="camera"){input.setAttribute("capture","environment");}
