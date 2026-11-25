@@ -126,7 +126,9 @@ footer strong{color:#e6c36e;font-size:19px}
 <option value="إنستا باي">إنستا باي</option>
 </select>
 <label for="receiptImage">صورة فاتورة الإيداع</label>
-<input id="receiptImage" type="file" accept="image/*" capture="environment" required>
+<input id="receiptImage" type="file" accept="image/*" required style="display:none" onchange="showReceiptName()">
+<button type="button" class="goldbtn" style="width:100%;margin-top:8px" onclick="document.getElementById(\'receiptImage\').click()">📷 اختيار صورة فاتورة الإيداع</button>
+<p id="receiptName" class="hint">لم يتم اختيار صورة بعد</p>
 <p class="hint">ارفع صورة واضحة لفاتورة الإيداع من الكاميرا أو معرض الصور. لن يتم إرسال الطلب بدون الصورة.</p>
 <p class="hint">تنبيه: سيتم مراجعة صورة الإيداع يدويًا قبل تأكيد الطلب.</p>
 </section>
@@ -190,6 +192,10 @@ document.getElementById("cartItems").innerHTML=cart.length?cart.map((p,i)=>`
 document.getElementById("total").textContent=cart.reduce((s,p)=>s+p.price*p.qty,0)+" جنيه";
 }
 function removeItem(i){cart.splice(i,1);save()}
+function showReceiptName(){
+const file=document.getElementById("receiptImage").files[0];
+document.getElementById("receiptName").textContent=file?"تم اختيار الصورة: "+file.name:"لم يتم اختيار صورة بعد";
+}
 async function order(){
 if(!cart.length){alert("السلة فارغة");return}
 const method=document.getElementById("paymentMethod").value;
