@@ -149,6 +149,26 @@ footer strong{color:#e6c36e;font-size:19px}
  .magazine-cats{grid-template-columns:repeat(7,minmax(0,1fr))}
 }
 
+
+/* MOBILE-FIRST MAGAZINE FRONT PAGE REFINEMENT */
+#home,.section#categories{display:none!important}
+#magazine{margin:0 auto!important;padding-top:14px!important}
+.magazine-intro{min-height:220px;display:flex;flex-direction:column;justify-content:center;text-align:center;border:1px solid #82652e!important;border-radius:4px;background:radial-gradient(ellipse at 50% 0%,#493516 0%,#17120a 48%,#080808 100%)!important}
+.magazine-intro h2{font-size:clamp(26px,6vw,42px)!important;line-height:1.5}
+.magazine-intro p{font-size:14px;line-height:1.9;color:#d8c9a6}
+.magazine-block{padding:0 2px}
+.magazine-strip-head h3{font-size:21px!important;color:#f2d28a}
+.magazine-products{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.magazine-product{border:1px solid #725729!important;background:linear-gradient(150deg,#302515,#100e0a)!important}
+.magazine-product-art{background:radial-gradient(ellipse at 50% 38%,#594522,#17130d 72%)!important}
+.magazine-product-art:not(:has(img)){font-size:58px!important}
+.magazine-product-copy{min-height:100px}
+.magazine-product-hint{color:#c9ae70}
+.magazine-cats{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.magazine-cat{font-size:12px!important}
+@media(min-width:650px){
+ .magazine-products{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
 </style>
 </head>
 <body>
@@ -160,8 +180,8 @@ footer strong{color:#e6c36e;font-size:19px}
 </header>
 
 <nav>
-<a href="#home">الرئيسية</a>
-<a href="#categories">الأقسام</a>
+<a href="#magazine">الرئيسية</a>
+<a href="#magazineCats">الأقسام</a>
 <a href="#magazine">المجلة</a>
 <a href="#products">المنتجات</a>
 <a href="#offers">العروض</a>
@@ -371,7 +391,8 @@ const newest=products.slice().reverse();
 const latestHost=document.getElementById("magazineLatest");
 latestHost.classList.remove("auto-strip");
 latestHost.innerHTML=newest.length?newest.map(p=>productCard(p,products.indexOf(p),"جديد")).join(""):'<div class="empty">لا توجد منتجات للعرض حاليًا</div>';
-const popular=products.filter(p=>p.popular);
+const selectedPopular=products.filter(p=>p.popular);
+const popular=selectedPopular.length?selectedPopular:newest.slice(0,4);
 const popularHost=document.getElementById("magazinePopular");
 popularHost.classList.remove("auto-strip");
 popularHost.innerHTML=popular.length?popular.map(p=>productCard(p,products.indexOf(p),"الأكثر طلبًا")).join(""):'<div class="empty">اختاري المنتجات الأكثر طلبًا من لوحة الإدارة لعرضها هنا.</div>';
