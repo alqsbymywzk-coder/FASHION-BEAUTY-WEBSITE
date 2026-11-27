@@ -356,6 +356,7 @@ footer strong{color:var(--gold2);font-size:19px}
 @media(max-width:620px){.market-bar{grid-template-columns:1fr;gap:8px;margin:10px auto 14px}.live-clock-card{padding:9px}.live-clock-time{font-size:32px}.gold-ticker-card{padding:10px}.gold-ticker-line{gap:7px;font-size:12px}.gold-ticker-price{font-size:18px}.gold-ticker-group{gap:8px}}
 @media(prefers-reduced-motion:reduce){.gold-live-dot{box-shadow:none}.gold-ticker-line{animation:none!important;transform:none!important}}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -523,7 +524,7 @@ footer strong{color:var(--gold2);font-size:19px}
 <script>
 
 
-const ADMIN_PASSWORD="411990M@mt";
+/* Admin authentication is handled by Supabase Auth; no password is stored in this file. */
 function toggleAdmin(){
 const panel=document.getElementById("adminPanel");
 if(sessionStorage.getItem("fb_admin_logged_in")==="1"){panel.classList.add("open");renderAdminProducts();panel.scrollIntoView({behavior:"smooth",block:"start"});return;}
@@ -834,5 +835,141 @@ async function refreshGlobalGold(){
 refreshGlobalGold();
 setInterval(refreshGlobalGold,60000);
 </script>
+
+<script>
+/* Shared FASHION & BEAUTY catalog — Supabase */
+const FB_SUPABASE_URL = "https://zimetbhtbqeqadibrdpj.supabase.co";
+const FB_SUPABASE_KEY = "sb_publishable_0HQ07EZKDsNT_tocjGjzog_8xYwYBZ0";
+const fbSupabase = window.supabase.createClient(FB_SUPABASE_URL, FB_SUPABASE_KEY);
+let fbIsStoreAdmin = false;
+
+function fbRowToProduct(row){
+  const imgs = Array.isArray(row.images) ? row.images : [];
+  return {
+    id: row.id, name: row.name || "", cat: row.category || "",
+    price: Number(row.price) || 0, code: row.product_code || "",
+    description: row.description || "", images: imgs,
+    image: imgs[0] || "", sizes: Array.isArray(row.sizes) ? row.sizes : [],
+    colors: Array.isArray(row.colors) ? row.colors : [],
+    sort_order: Number(row.sort_order) || 0, popular: false
+  };
+}
+async function fbCheckAdmin(){
+  const {data:{user}} = await fbSupabase.auth.getUser();
+  if(!user){ fbIsStoreAdmin=false; return false; }
+  const {data,error} = await fbSupabase.from("user_roles").select("role").eq("user_id",user.id).maybeSingle();
+  fbIsStoreAdmin=!error && !!data && data.role==="admin";
+  return fbIsStoreAdmin;
+}
+async function fbLoadCatalog(){
+  const admin=await fbCheckAdmin();
+  let query=fbSupabase.from("products").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});
+  if(!admin) query=query.eq("is_active",true);
+  const {data,error}=await query;
+  if(error) throw error;
+  products=(data||[]).map(fbRowToProduct);
+  render(); renderMagazine();
+  if(admin) renderAdminProducts();
+}
+async function fbRefreshAdminState(){
+  const ok=await fbCheckAdmin();
+  document.getElementById("adminPanel").classList.toggle("open",ok);
+  if(ok) renderAdminProducts();
+  return ok;
+}
+function toggleAdmin(){
+  if(fbIsStoreAdmin){document.getElementById("adminPanel").classList.toggle("open");if(document.getElementById("adminPanel").classList.contains("open")){renderAdminProducts();document.getElementById("adminPanel").scrollIntoView({behavior:"smooth",block:"start"});}return;}
+  const overlay=document.getElementById("adminLoginOverlay");
+  const form=overlay.querySelector("form");
+  form.innerHTML='<h3>دخول المدير</h3><label for="fbAdminEmail">البريد الإلكتروني</label><input id="fbAdminEmail" type="email" autocomplete="username" placeholder="البريد المسجل في لوحة Supabase" required><label for="adminPasswordInput">كلمة المرور</label><input id="adminPasswordInput" type="password" autocomplete="current-password" placeholder="كلمة مرور حساب المدير" required><p id="adminLoginError" class="admin-login-error"></p><div class="admin-actions"><button type="submit">دخول</button><button type="button" onclick="closeAdminLogin()" style="background:#444;color:#fff">إلغاء</button></div>';
+  form.onsubmit=submitAdminLogin;
+  document.getElementById("adminLoginError").textContent="";
+  overlay.classList.add("show");
+}
+function closeAdminLogin(){document.getElementById("adminLoginOverlay").classList.remove("show");}
+async function submitAdminLogin(e){
+  e.preventDefault();
+  const email=document.getElementById("fbAdminEmail").value.trim();
+  const password=document.getElementById("adminPasswordInput").value;
+  const errorNode=document.getElementById("adminLoginError");
+  const {error}=await fbSupabase.auth.signInWithPassword({email,password});
+  if(error){errorNode.textContent="تعذر تسجيل الدخول. راجع البريد وكلمة المرور.";return;}
+  const ok=await fbCheckAdmin();
+  if(!ok){await fbSupabase.auth.signOut();errorNode.textContent="هذا الحساب ليس لديه صلاحية إدارة المتجر.";return;}
+  closeAdminLogin();
+  document.getElementById("adminPanel").classList.add("open");
+  await fbLoadCatalog();
+  document.getElementById("adminPanel").scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function adminLogout(){
+  await fbSupabase.auth.signOut();
+  fbIsStoreAdmin=false;
+  document.getElementById("adminPanel").classList.remove("open");
+  resetAdminForm();
+  await fbLoadCatalog();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+async function fbUploadProductImage(file){
+  const dataUrl=await compressProductImage(file);
+  const blob=await (await fetch(dataUrl)).blob();
+  const path="products/"+crypto.randomUUID()+".jpg";
+  const {error}=await fbSupabase.storage.from("product-images").upload(path,blob,{contentType:"image/jpeg",upsert:false});
+  if(error) throw error;
+  const {data}=fbSupabase.storage.from("product-images").getPublicUrl(path);
+  return data.publicUrl;
+}
+async function saveAdminProduct(e){
+  e.preventDefault();
+  if(!await fbCheckAdmin()){alert("سجّل دخول المدير أولاً.");return;}
+  const name=document.getElementById("adminName").value.trim();
+  const price=Number(document.getElementById("adminPrice").value);
+  const code=document.getElementById("adminCode").value.trim();
+  const cat=document.getElementById("adminCategory").value;
+  const sizes=[...document.querySelectorAll('input[name="adminSizeChoice"]:checked')].map(x=>x.value);
+  const colors=[...document.querySelectorAll('input[name="adminColorChoice"]:checked')].map(x=>x.value);
+  const files=[...document.getElementById("adminImage").files];
+  const editIndex=Number(document.getElementById("adminEditIndex").value);
+  const old=editIndex>=0?products[editIndex]:null;
+  let images=old?(old.images||[]).slice():[];
+  if(files.length>6){alert("يمكن إضافة 6 صور كحد أقصى للمنتج.");return;}
+  for(const file of files){if(!file.type.startsWith("image/")||file.size>12000000){alert("اختر صورًا صحيحة، حجم كل صورة أقل من 12 ميجابايت.");return;}}
+  if(!old&&!files.length){alert("أضف صورة واحدة على الأقل للمنتج.");return;}
+  const isFashion=["رجالي","حريمي","أطفال"].includes(cat);
+  if(isFashion&&(!sizes.length||!colors.length)){alert("حدد المقاسات والألوان المتاحة للملابس.");return;}
+  try{
+    for(const file of files) images.push(await fbUploadProductImage(file));
+    images=images.slice(0,6);
+    if(!images.length){alert("لا يمكن حفظ منتج من غير صورة.");return;}
+    const payload={
+      product_code:code||null,name,description:"",category:cat,price,
+      images,sizes:isFashion?sizes:[],colors:isFashion?colors:[],
+      is_active:true,sort_order:old?old.sort_order:0
+    };
+    let result;
+    if(old&&old.id) result=await fbSupabase.from("products").update(payload).eq("id",old.id);
+    else result=await fbSupabase.from("products").insert(payload);
+    if(result.error) throw result.error;
+    resetAdminForm();
+    document.getElementById("adminImage").value="";
+    await fbLoadCatalog();
+    alert("تم حفظ المنتج في قاعدة البيانات المشتركة بنجاح.");
+  }catch(err){console.error(err);alert("لم يتم الحفظ: "+(err.message||"تحقق من اتصال قاعدة البيانات وصلاحيات الصور."));}
+}
+async function deleteAdminProduct(i){
+  if(!await fbCheckAdmin()){alert("سجّل دخول المدير أولاً.");return;}
+  const p=products[i];if(!p||!p.id)return;
+  if(!confirm("متأكد إنك عايز تحذف المنتج من المتجر؟"))return;
+  const {error}=await fbSupabase.from("products").delete().eq("id",p.id);
+  if(error){alert("تعذر حذف المنتج: "+error.message);return;}
+  await fbLoadCatalog();
+}
+window.addEventListener("load",async()=>{
+  document.querySelector(".admin-note").textContent="إدارة موحدة: المنتجات والصور تُحفظ في قاعدة البيانات المشتركة وتظهر على الموقع والتطبيق.";
+  try{await fbLoadCatalog();}
+  catch(err){console.error(err);document.getElementById("productsList").innerHTML='<div class="empty">تعذر تحميل المنتجات الآن. تحقق من اتصال قاعدة البيانات وسياسات القراءة العامة.</div>';}
+  await fbRefreshAdminState();
+});
+</script>
+
 </body>
 </html>
